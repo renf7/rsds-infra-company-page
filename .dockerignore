@@ -1,0 +1,16 @@
+# Version control
+.git
+.gitignore
+
+# CI / repo metadata
+.github
+README.md
+
+# Editor / OS / temp files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
