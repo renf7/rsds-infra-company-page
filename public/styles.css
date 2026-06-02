@@ -80,6 +80,9 @@ a:hover {
   display: block;
   height: 40px;
   width: auto;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 4px;
 }
 
 .site-nav {
@@ -103,22 +106,6 @@ a:hover {
   border-radius: 999px;
   background: var(--brand-strong);
   color: #fff !important;
-}
-
-/* Hero brand logo card (logo ships on a white background) */
-.hero-brand {
-  display: inline-block;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 16px;
-  margin-bottom: 28px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
-}
-
-.hero-brand img {
-  display: block;
-  width: 160px;
-  height: auto;
 }
 
 /* Hero */
