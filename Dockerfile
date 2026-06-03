@@ -1,4 +1,4 @@
-# Serve the static RSDS website with the official nginx image.
+# Serve the static RSD Software website with the official nginx image.
 FROM nginx:alpine
 
 # Copy the static site into the default nginx web root.

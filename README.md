@@ -1,8 +1,8 @@
 # rsds-infra-company-page
 
-Static company website for **RSDS** (rsdsoftware.eu), served by nginx.
+Static company website for **RSD Software** (rsdsoftware.eu), served by nginx.
 
-RSDS builds robust Java software with AI-powered support, delivered by experienced
+RSD Software builds robust Java software with AI-powered support, delivered by experienced
 software professionals. This repository contains the marketing landing page and the
 Docker packaging used to ship it.
 
