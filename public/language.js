@@ -1,28 +1,32 @@
 (() => {
-  const LANGUAGE_KEY = "rsd-language";
-  const DETECTION_KEY = "rsd-country-detected";
+  const COUNTRY_KEY = "rsd-detected-country";
+  const COUNTRY_ROUTES = {
+    PL: "/pl/",
+  };
+
+  const redirectToCountryPage = (country) => {
+    const countryRoute = COUNTRY_ROUTES[country];
+    if (countryRoute && window.location.pathname !== countryRoute) {
+      window.location.replace(countryRoute);
+      return true;
+    }
+    return false;
+  };
 
   document.querySelectorAll("[data-language-choice]").forEach((link) => {
     link.addEventListener("click", () => {
-      localStorage.setItem(LANGUAGE_KEY, link.dataset.languageChoice);
+      sessionStorage.setItem(
+        COUNTRY_KEY,
+        link.dataset.languageChoice.toUpperCase(),
+      );
     });
   });
 
-  const preferredLanguage = localStorage.getItem(LANGUAGE_KEY);
-  if (preferredLanguage === "pl" && window.location.pathname === "/") {
-    window.location.replace("/pl/");
+  const detectedCountry = sessionStorage.getItem(COUNTRY_KEY);
+  if (detectedCountry) {
+    redirectToCountryPage(detectedCountry);
     return;
   }
-
-  if (
-    preferredLanguage ||
-    window.location.pathname !== "/" ||
-    sessionStorage.getItem(DETECTION_KEY)
-  ) {
-    return;
-  }
-
-  sessionStorage.setItem(DETECTION_KEY, "true");
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 2000);
@@ -38,8 +42,10 @@
       return response.json();
     })
     .then(({ country }) => {
-      if (country === "PL") {
-        window.location.replace("/pl/");
+      if (typeof country === "string") {
+        const normalizedCountry = country.toUpperCase();
+        sessionStorage.setItem(COUNTRY_KEY, normalizedCountry);
+        redirectToCountryPage(normalizedCountry);
       }
     })
     .catch(() => {
