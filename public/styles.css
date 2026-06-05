@@ -100,6 +100,13 @@ a:hover {
   text-decoration: none;
 }
 
+.language-choice {
+  padding-left: 16px;
+  border-left: 1px solid var(--border);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .nav-cta {
   padding: 8px 16px;
   border-radius: 999px;
@@ -286,8 +293,13 @@ a:hover {
     gap: 14px;
   }
 
-  .site-nav a:not(.nav-cta) {
+  .site-nav a:not(.nav-cta):not(.language-choice) {
     display: none;
+  }
+
+  .language-choice {
+    padding-left: 0;
+    border-left: 0;
   }
 
   .hero {
