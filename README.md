@@ -45,9 +45,16 @@ http://localhost:8080
 
 ## Continuous delivery (Docker Hub)
 
-On every push to `main`, the GitHub Actions workflow
-[`.github/workflows/docker-build.yml`](.github/workflows/docker-build.yml) builds the
-image and pushes it to Docker Hub.
+The GitHub Actions workflow
+[`.github/workflows/docker-build.yml`](.github/workflows/docker-build.yml) handles the
+image lifecycle:
+
+- **Pull requests** build the image as a validation step (no push), so a broken
+  `Dockerfile` is caught before it reaches `main`.
+- **Pushes to `main`** build the image and push it to Docker Hub.
+- **Manual runs** (Actions → *Build and push Docker image* → *Run workflow*) build
+  and push on demand — handy for publishing the first `latest` tag right after the
+  Docker Hub secrets are configured, without needing a new commit.
 
 ### Required GitHub repository secrets
 
