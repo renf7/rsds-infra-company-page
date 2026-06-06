@@ -59,6 +59,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 22px;
   padding-top: 14px;
   padding-bottom: 14px;
 }
@@ -88,6 +89,7 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 22px;
+  margin-left: auto;
 }
 
 .site-nav a {
@@ -100,11 +102,27 @@ a:hover {
   text-decoration: none;
 }
 
-.language-choice {
+.language-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   padding-left: 16px;
   border-left: 1px solid var(--border);
+}
+
+.language-nav a {
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--muted);
   font-weight: 700;
   letter-spacing: 0.04em;
+}
+
+.language-nav a:hover,
+.language-nav a[aria-current="page"] {
+  color: var(--text);
+  background: var(--surface);
+  text-decoration: none;
 }
 
 .nav-cta {
@@ -293,11 +311,11 @@ a:hover {
     gap: 14px;
   }
 
-  .site-nav a:not(.nav-cta):not(.language-choice) {
+  .site-nav a:not(.nav-cta) {
     display: none;
   }
 
-  .language-choice {
+  .language-nav {
     padding-left: 0;
     border-left: 0;
   }
