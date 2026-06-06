@@ -1,24 +1,18 @@
 name: Build and push Docker image
 
-# - Pull requests build the image (validation only, no push).
-# - Pushes to main and manual runs build the image and publish it to Docker Hub.
+# Only a remote push that changes main builds and publishes an image.
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     env:
-      # Fall back to a local image name when the Docker Hub username secret is
-      # not configured (e.g. on pull requests), so build validation still works.
+      # Fall back to a local image name when Docker Hub secrets are not configured.
       IMAGE: ${{ secrets.DOCKERHUB_USERNAME != '' && format('{0}/rsds-infra-company-page', secrets.DOCKERHUB_USERNAME) || 'rsds-infra-company-page' }}
-      PUSH: ${{ github.event_name != 'pull_request' && secrets.DOCKERHUB_USERNAME != '' }}
+      PUSH: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

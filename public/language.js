@@ -1,30 +1,60 @@
 (() => {
+  const PREFERENCE_KEY = "rsd-language-preference";
   const COUNTRY_KEY = "rsd-detected-country";
-  const COUNTRY_ROUTES = {
-    PL: "/pl/",
+  const POLISH_ROUTE = "/pl/";
+
+  const readStorage = (storageName, key) => {
+    try {
+      return window[storageName].getItem(key);
+    } catch {
+      return null;
+    }
   };
 
-  const redirectToCountryPage = (country) => {
-    const countryRoute = COUNTRY_ROUTES[country];
-    if (countryRoute && window.location.pathname !== countryRoute) {
-      window.location.replace(countryRoute);
-      return true;
+  const writeStorage = (storageName, key, value) => {
+    try {
+      window[storageName].setItem(key, value);
+    } catch {
+      // Language selection still works when browser storage is unavailable.
     }
-    return false;
+  };
+
+  const redirectToPolish = () => {
+    window.location.replace(
+      `${POLISH_ROUTE}${window.location.search}${window.location.hash}`,
+    );
   };
 
   document.querySelectorAll("[data-language-choice]").forEach((link) => {
     link.addEventListener("click", () => {
-      sessionStorage.setItem(
-        COUNTRY_KEY,
-        link.dataset.languageChoice.toUpperCase(),
-      );
+      writeStorage("localStorage", PREFERENCE_KEY, link.dataset.languageChoice);
     });
   });
 
-  const detectedCountry = sessionStorage.getItem(COUNTRY_KEY);
+  // Infer a language only at the English entry URL. Both dedicated language
+  // URLs remain directly accessible to users and search-engine crawlers.
+  const isEnglishEntry =
+    window.location.pathname === "/" ||
+    window.location.pathname === "/index.html";
+
+  if (!isEnglishEntry) {
+    return;
+  }
+
+  const preferredLanguage = readStorage("localStorage", PREFERENCE_KEY);
+  if (preferredLanguage === "pl") {
+    redirectToPolish();
+    return;
+  }
+  if (preferredLanguage === "en") {
+    return;
+  }
+
+  const detectedCountry = readStorage("sessionStorage", COUNTRY_KEY);
   if (detectedCountry) {
-    redirectToCountryPage(detectedCountry);
+    if (detectedCountry === "PL") {
+      redirectToPolish();
+    }
     return;
   }
 
@@ -33,6 +63,8 @@
 
   fetch("https://api.country.is/", {
     cache: "no-store",
+    credentials: "omit",
+    referrerPolicy: "no-referrer",
     signal: controller.signal,
   })
     .then((response) => {
@@ -42,14 +74,21 @@
       return response.json();
     })
     .then(({ country }) => {
-      if (typeof country === "string") {
-        const normalizedCountry = country.toUpperCase();
-        sessionStorage.setItem(COUNTRY_KEY, normalizedCountry);
-        redirectToCountryPage(normalizedCountry);
+      if (typeof country !== "string") {
+        return;
+      }
+
+      const normalizedCountry = country.toUpperCase();
+      writeStorage("sessionStorage", COUNTRY_KEY, normalizedCountry);
+      if (
+        normalizedCountry === "PL" &&
+        readStorage("localStorage", PREFERENCE_KEY) !== "en"
+      ) {
+        redirectToPolish();
       }
     })
     .catch(() => {
-      // Keep English as the reliable fallback when geolocation is unavailable.
+      // English remains the reliable fallback when geolocation is unavailable.
     })
     .finally(() => window.clearTimeout(timeout));
 })();
