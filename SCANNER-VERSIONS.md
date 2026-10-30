@@ -15,11 +15,13 @@ Latest stable upstream releases were checked against GitHub Releases and npm reg
 | React Hooks ESLint plugin | 7.1.1 | Latest npm stable |
 | JSX accessibility plugin | 6.10.2 | Latest npm stable; excludes ESLint 10 from its peer range |
 | typescript-eslint | 8.72.1 | Latest npm stable; supports TypeScript >=4.8.4 <6.1.0 |
-| ESLint / @eslint/js | 9.39.5 | Compatibility exception: latest ESLint is 10.13.0 and @eslint/js is 10.0.1, but jsx-a11y does not declare ESLint 10 support |
+| ESLint / @eslint/js | 9.39.5 | Compatibility exception: latest ESLint is 10.14.0 and @eslint/js is 10.0.1, but jsx-a11y does not declare ESLint 10 support |
 | TypeScript | 6.0.3 | Updated from 5.9.3; latest npm stable 7.0.2 is outside typescript-eslint's supported range |
 | globals | 17.13.0 | Updated from 16.5.0 |
 
 ESLint 9 is EOL upstream. This is an explicit temporary compatibility exception, not a claim that all tools are at the latest major. Upgrade to ESLint 10 once jsx-a11y declares support, or separately review/test a maintained accessibility alternative. Do not install paid extended support, force peer dependency resolution or disable accessibility checks without review.
+
+React migration dependencies rechecked directly against npm stable metadata on 30 October 2026: React/react-dom 19.3.1, Vite 8.3.5, plugin-react 6.1.2, Vitest/coverage-v8 5.0.5, Testing Library React 16.3.3 / DOM 10.4.2 / jest-dom 7.0.1, jsdom 30.1.3 and tsx 4.23.15. React types are 19.3.0. Node types 24.19.2 match the supported Node 24 LTS build/runtime tools; the latest Node 26 types are intentionally not used to expose APIs unavailable in Node 24. TypeScript 7.0.2 remains outside typescript-eslint 8.72.1's explicit >=4.8.4 <6.1.0 range, so retain 6.0.3. Existing Hooks/accessibility/typed rules remain active against real TSX. All app/test dependencies are pinned with a reproducible lockfile; no force/legacy-peer-deps install is used.
 
 ESLint locally passed with the updated lockfile; a temporary unhandled-Promise probe confirmed type-aware scanning with TypeScript 6.0.3. GitHub PR runs validate the updated scanner action and Semgrep. See the PR checks for final results; existing Sonar quality-gate findings are separate from tool-version compatibility.
 

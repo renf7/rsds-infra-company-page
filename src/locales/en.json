@@ -1,0 +1,133 @@
+{
+  "home": "/",
+  "homeLabel": "RSD Software home",
+  "logo": "logo-icon.png",
+  "logoAlt": "RSD Software logo",
+  "navigationLabel": "Primary",
+  "languageLabel": "Language selection",
+  "navigation": [
+    {
+      "id": "java",
+      "label": "Java"
+    },
+    {
+      "id": "ai",
+      "label": "AI-Assisted"
+    },
+    {
+      "id": "team",
+      "label": "Team"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
+    }
+  ],
+  "hero": {
+    "eyebrow": "RSD Software · rsdsoftware.eu",
+    "heading": "Professional Java Software Development with AI-Powered Support",
+    "description": "RSD Software is a Java software development company. We use AI to accelerate the engineering process, while delivery stays led by senior engineers who own architecture, quality, and outcomes.",
+    "primary": "Start a project",
+    "secondary": "Explore services"
+  },
+  "sections": [
+    {
+      "id": "java",
+      "className": "section",
+      "heading": "Java software development",
+      "lead": "We design and build production-grade backend systems in Java. From APIs and microservices to data-heavy platforms, we focus on software that is reliable, maintainable, and ready to scale.",
+      "cards": [
+        {
+          "heading": "Backend & APIs",
+          "description": "Spring Boot services, REST and event-driven APIs designed for clarity and longevity."
+        },
+        {
+          "heading": "Architecture",
+          "description": "Pragmatic, well-documented architecture that fits your domain instead of fighting it."
+        },
+        {
+          "heading": "Quality & testing",
+          "description": "Automated tests, code review, and CI so changes ship safely and predictably."
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "className": "section section-alt",
+      "heading": "AI-assisted engineering",
+      "lead": "AI supports our engineering process: it speeds up research, code review, refactoring, and documentation. It is a tool in the hands of our engineers, not a replacement for engineering judgment.",
+      "cards": [
+        {
+          "heading": "Faster delivery",
+          "description": "AI helps us move quickly through boilerplate and exploration so we focus on the hard parts."
+        },
+        {
+          "heading": "Human-reviewed",
+          "description": "Every change is reviewed and validated by experienced developers before it ships."
+        },
+        {
+          "heading": "Sound decisions",
+          "description": "Architecture, trade-offs, and design remain owned by senior engineers."
+        }
+      ]
+    },
+    {
+      "id": "team",
+      "className": "section",
+      "heading": "Experienced software professionals",
+      "lead": "Delivery is led by seasoned Java developers with real-world experience building and operating software in production. We are software engineers first — not prompt developers — and we take responsibility for what we ship.",
+      "cards": [
+        {
+          "heading": "Senior ownership",
+          "description": "Engineers who have shipped, maintained, and scaled production systems lead each project."
+        },
+        {
+          "heading": "Accountable delivery",
+          "description": "We own quality, security, and maintainability end to end — not just the first draft."
+        },
+        {
+          "heading": "Long-term thinking",
+          "description": "We build software your team can understand, extend, and trust for years."
+        }
+      ]
+    },
+    {
+      "id": "services",
+      "className": "section section-alt",
+      "heading": "Services",
+      "lead": "Practical software services built around your goals.",
+      "cards": [
+        {
+          "heading": "Custom Java development",
+          "description": "New applications and services built to fit your domain and constraints."
+        },
+        {
+          "heading": "Modernization",
+          "description": "Refactoring, upgrades, and re-architecture of existing Java systems."
+        },
+        {
+          "heading": "API & integration",
+          "description": "Robust APIs and integrations between your systems and third-party platforms."
+        },
+        {
+          "heading": "Consulting & review",
+          "description": "Architecture reviews, code audits, and guidance for your engineering team."
+        }
+      ]
+    }
+  ],
+  "certificatesLabel": "Team certifications",
+  "certificates": [
+    "Oracle Certified Professional: Java SE 11 Developer",
+    "Java Programmer, Oracle Certified Professional 6"
+  ],
+  "contact": {
+    "heading": "Let’s build something reliable",
+    "description": "Tell us about your project and we’ll get back to you. Delivery is led by experienced Java engineers, supported by AI."
+  },
+  "footer": "Robust Java software, AI-powered support, delivered by experienced professionals."
+}

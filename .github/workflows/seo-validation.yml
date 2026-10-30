@@ -17,6 +17,12 @@ jobs:
         with:
           python-version: "3.13"
 
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Build indexable React pages
+        run: npm ci --ignore-scripts --no-audit --no-fund && npm run build
+
       - name: Install XML parser
         run: python -m pip install -r scripts/requirements.txt
 

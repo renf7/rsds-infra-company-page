@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PUBLIC = ROOT / "public"
+PUBLIC = ROOT / "dist"
 BASE_URL = "https://www.rsdsoftware.eu"
 ORGANIZATION_ID = f"{BASE_URL}/#organization"
 WEBSITE_ID = f"{BASE_URL}/#website"
@@ -34,7 +34,6 @@ PAGES = {
         "h1": "Professional Java Software Development with AI-Powered Support",
         "og_locale": "en_US",
         "alternate_locale": "pl_PL",
-        "language_script": "language.js",
         "website_json_ld": True,
     },
     PUBLIC / "pl" / "index.html": {
@@ -48,7 +47,6 @@ PAGES = {
         "h1": "Profesjonalne tworzenie oprogramowania Java ze wsparciem AI",
         "og_locale": "pl_PL",
         "alternate_locale": "en_US",
-        "language_script": "../language.js",
         "website_json_ld": False,
     },
 }
@@ -300,8 +298,8 @@ def validate_page(page_path, expected):
     source_scripts = [script["attrs"] for script in parser.scripts if script["attrs"].get("src")]
     check(len(source_scripts) == 1, f"{label}: expected exactly one executable script")
     if source_scripts:
-        check(source_scripts[0].get("src") == expected["language_script"], f"{label}: invalid language script path")
-        check("defer" in source_scripts[0], f"{label}: language script must be deferred")
+        check(source_scripts[0].get("src", "").startswith("/assets/"), f"{label}: missing bundled React module")
+        check(source_scripts[0].get("type") == "module", f"{label}: client entry must be a deferred ES module")
 
     for image in parser.images:
         check(bool(image.get("alt")), f"{label}: image is missing descriptive alt text")
@@ -337,33 +335,6 @@ def validate_page(page_path, expected):
 
     validate_json_ld(parser, expected, label)
     return expected["title"], expected["description"], expected["h1"]
-
-
-def validate_language_detection():
-    language_script = PUBLIC / "language.js"
-    check(language_script.is_file(), "language.js must exist")
-    if not language_script.is_file():
-        return
-
-    source = language_script.read_text(encoding="utf-8")
-    required_markers = [
-        'window.location.pathname === "/"',
-        'window.location.pathname === "/index.html"',
-        'if (!isEnglishEntry)',
-        'readStorage("localStorage", PREFERENCE_KEY)',
-        'writeStorage("localStorage", PREFERENCE_KEY',
-        'readStorage("sessionStorage", COUNTRY_KEY)',
-        'fetch("https://api.country.is/"',
-        'credentials: "omit"',
-        'referrerPolicy: "no-referrer"',
-        'normalizedCountry === "PL"',
-        'readStorage("localStorage", PREFERENCE_KEY) !== "en"',
-        "window.location.replace(",
-    ]
-    for marker in required_markers:
-        check(marker in source, f"language.js: missing safety marker {marker!r}")
-    check("navigator.language" not in source, "language.js must not redirect solely from browser language")
-    check("navigator.languages" not in source, "language.js must not redirect solely from browser languages")
 
 
 def validate_sitemap():
@@ -444,7 +415,6 @@ def main():
     check(len(descriptions) == len(PAGES), "Meta descriptions must be unique")
     check(len(h1s) == len(PAGES), "Page h1 headings must be unique")
 
-    validate_language_detection()
     validate_sitemap()
     validate_robots()
 
