@@ -37,7 +37,7 @@ jobs:
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:git-${{ github.sha }}
       - name: Scan image before publishing
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           version: v0.76.1
           scan-type: image
