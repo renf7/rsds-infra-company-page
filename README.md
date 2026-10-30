@@ -53,6 +53,10 @@ Vitest/Testing Library test frozen EN/PL DOM/content, storage/country/timeout la
 
 ## Headless browser and Helm checks
 
+SSO feature (RSDSINFRA-19): the header now has an accessible English/Polish login dialog for Facebook, Microsoft, Google, Apple and GitHub, with cookie-based session/logout. The existing marketing CSS/content/assets remain preserved. Authenticated UI state comes from the backend; JavaScript never stores or decodes JWTs for authorization. A standalone/frontend-only image reports an anonymous session and unavailable providers, never a simulated login.
+
+For the full Spring/DynamoDB/provider-protocol test stack, use the runner's `local-test-auth.json`, frontend PR #17, auth-service PR #1, Helm PR #9 and runner PR #1 until merged. The expanded suite is 36 tests (16 marketing + 20 authentication), with real callbacks/JWT cookies/database requests. Provider registrations are not available, so the external provider boundary is explicitly a local protocol fixture; live-provider acceptance remains pending. Auth additions intentionally change header controls; strict visual comparisons cover unchanged main/footer regions (8 desktop/mobile EN/PL comparisons), while original header DOM, responsive navigation and new keyboard/mobile auth behavior have separate contracts.
+
 React CI runs the 16 existing headless behavior tests from a pinned `rsds-infra-local` revision against the production image. It also tests direct navigation/refresh without JavaScript on `/`, `/index.html`, `/pl/` and `/pl/index.html`; four EN/PL desktop/mobile screenshot comparisons require zero differing pixels against pre-migration commit `d8eabc402529f57a245134007c362e456d1f0042`. Browser reports, screenshots and coverage are retained as CI artifacts. Containers are built without publishing or deploying production.
 
 For the actual chart on your own Docker engine, follow the [local runner runbook](https://github.com/renf7/rsds-infra-local/blob/RSDSINFRA-25-local-testing/README.md), build its implementation branch, and run from that repository root:
