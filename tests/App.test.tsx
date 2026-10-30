@@ -11,7 +11,7 @@ function signature(element: Element): unknown {
     attributes: [...element.attributes].map(a => `${a.name}=${a.value}`).sort(),
     text: [...element.childNodes].filter(node => node.nodeType === Node.TEXT_NODE)
       .map(node => (node.textContent ?? '').replace(/\s+/g, ' ').trim()).filter(Boolean),
-    children: [...element.children].map(signature),
+    children: [...element.children].filter(child => !child.hasAttribute('data-auth-ui')).map(signature),
   };
 }
 

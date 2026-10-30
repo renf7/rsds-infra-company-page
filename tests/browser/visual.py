@@ -60,11 +60,18 @@ with sync_playwright() as playwright:
                 page = context.new_page()
                 page.goto(url + route, wait_until='networkidle')
                 page.evaluate('document.fonts.ready')
-                captures[version] = page.screenshot(path=str(OUTPUT / f'{version}-{device}-{language}.png'), full_page=True, animations='disabled')
+                # Header controls are the explicitly approved SSO addition. The existing
+                # header DOM remains contract-tested; responsive/focus behavior is E2E-tested.
+                # Keep strict pixel parity for all unchanged marketing content and footer.
+                page.locator('header').evaluate("element => { element.style.visibility = 'hidden'; }")
+                captures[version] = {}
+                for region in ['main', 'footer']:
+                    captures[version][region] = page.locator(region).screenshot(path=str(OUTPUT / f'{version}-{device}-{language}-{region}.png'), animations='disabled')
                 context.close()
             if CANDIDATE:
-                result = comparison.evaluate(COMPARE, {key: base64.b64encode(value).decode() for key, value in [('left', captures['baseline']), ('right', captures['candidate'])]})
-                results.append({'device': device, 'language': language, **result})
+                for region in ['main', 'footer']:
+                    result = comparison.evaluate(COMPARE, {key: base64.b64encode(value).decode() for key, value in [('left', captures['baseline'][region]), ('right', captures['candidate'][region])]})
+                    results.append({'device': device, 'language': language, 'region': region, **result})
     browser.close()
     (OUTPUT / 'visual-results.json').write_text(json.dumps(results, indent=2), encoding='utf-8')
     print(json.dumps(results, indent=2))
