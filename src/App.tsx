@@ -1,5 +1,6 @@
 import { content, type Feature, type Language, type PageContent, type SectionContent } from './content';
 import { rememberLanguage, useLanguageRedirect } from './language';
+import { AuthControls } from './AuthControls';
 
 export function Header({ page, language, homeNavigation = false }: { page: PageContent; language: Language; homeNavigation?: boolean }) {
   return <header className="site-header">
@@ -14,6 +15,7 @@ export function Header({ page, language, homeNavigation = false }: { page: PageC
         <a href="/" lang="en" hrefLang="en" data-language-choice="en" aria-current={language === 'en' ? 'page' : undefined} onClick={() => rememberLanguage('en')}>EN</a>
         <a href="/pl/" lang="pl" hrefLang="pl" data-language-choice="pl" aria-current={language === 'pl' ? 'page' : undefined} onClick={() => rememberLanguage('pl')}>PL</a>
       </nav>
+      <AuthControls language={language} />
     </div>
   </header>;
 }
