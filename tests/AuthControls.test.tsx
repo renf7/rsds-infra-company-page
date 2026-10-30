@@ -16,7 +16,7 @@ it('opens an accessible modal with backend-managed provider links and restores f
   fireEvent.click(button);
   expect(screen.getByRole('dialog')).toHaveAccessibleName('Log in');
   for (const provider of api.providerNames) {
-    expect(await screen.findByRole('link', { name: provider[0].toUpperCase() + provider.slice(1) })).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
+    expect(await screen.findByRole('link', { name: api.providerLabels[provider] })).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
   }
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

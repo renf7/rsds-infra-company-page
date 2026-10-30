@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { action, providers, providerNames, session, type AvailableProvider, type Session } from './auth-api';
+import { action, providers, providerNames, providerLabels, session, type AvailableProvider, type Session } from './auth-api';
 import type { Language } from './content';
 
 export function AuthControls({ language }: { language: Language }) {
@@ -30,7 +30,7 @@ export function AuthControls({ language }: { language: Language }) {
   };
   return <div className="auth-controls" data-auth-ui="true">
     {identity.authenticated
-      ? <button type="button" className="auth-button" onClick={logout}>{polish ? 'Wyloguj' : 'Log out'}</button>
+      ? <button type="button" className="auth-button" title={identity.name} aria-label={polish ? 'Wyloguj' : 'Log out'} onClick={logout}><span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Wyloguj' : 'Log out'}</span></button>
       : <button ref={button} type="button" className="auth-button" aria-label={polish ? 'Zaloguj się' : 'Log in'} onClick={open}>
         <span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Zaloguj się' : 'Log in'}</span>
       </button>}
@@ -40,8 +40,8 @@ export function AuthControls({ language }: { language: Language }) {
       <p>{polish ? 'Wybierz dostawcę konta. Hasło podajesz tylko u dostawcy.' : 'Choose your account provider. Enter your password only with that provider.'}</p>
       <div className="auth-provider-list">{providerNames.map(provider => {
         const enabled = available.some(item => item.id === provider && item.enabled);
-        const label = provider[0].toUpperCase() + provider.slice(1);
-        return enabled ? <a className="btn btn-secondary" key={provider} href={'/api/auth/oauth2/authorization/' + provider}>{label}</a>
+        const label = providerLabels[provider];
+        return enabled ? <a className="btn btn-secondary" key={provider} href={'/api/auth/oauth2/authorization/' + provider + (polish ? '?lang=pl' : '')}>{label}</a>
           : <button className="btn btn-secondary" type="button" key={provider} disabled>{label}</button>;
       })}</div>
       {error && <p role="alert">{error}</p>}
