@@ -1,6 +1,7 @@
 export interface Session { authenticated: boolean; name?: string; provider?: string; roles?: readonly string[] }
 export const providerNames = ['facebook', 'microsoft', 'google', 'apple', 'github'] as const;
 export type Provider = typeof providerNames[number];
+export const providerLabels: Record<Provider, string> = { facebook: 'Facebook', microsoft: 'Microsoft', google: 'Google', apple: 'Apple', github: 'GitHub' };
 export interface AvailableProvider { id: Provider; enabled: boolean }
 export async function session(): Promise<Session> {
   let response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' });
