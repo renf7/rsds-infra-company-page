@@ -10,6 +10,22 @@ export function AuthControls({ language }: { language: Language }) {
   const [error, setError] = useState('');
   const polish = language === 'pl';
   useEffect(() => {
+    const modal = dialog.current;
+    if (!modal) return;
+    const keepFocus = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+      const controls = modal.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)');
+      const first = controls.item(0);
+      const last = controls.item(controls.length - 1);
+      if ((event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first)?.focus();
+      }
+    };
+    modal.addEventListener('keydown', keepFocus);
+    return () => { modal.removeEventListener('keydown', keepFocus); };
+  }, []);
+  useEffect(() => {
     let active = true;
     void session().then(value => {
       if (!active) return;
