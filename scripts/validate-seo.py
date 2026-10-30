@@ -4,7 +4,7 @@
 import json
 import struct
 import sys
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse

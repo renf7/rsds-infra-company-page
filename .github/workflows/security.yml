@@ -1,0 +1,83 @@
+name: Security scans
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  trivy:
+    name: Trivy repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          version: v0.76.1
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,misconfig,secret
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: false
+  semgrep:
+    name: Semgrep Community Edition
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install Community Edition
+        run: python -m pip install -r tools/security/requirements.txt
+      - name: Scan without a Semgrep account
+        run: semgrep scan --oss-only --config p/default --metrics off --error .
+  image:
+    name: Trivy built image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Build image without publishing
+        run: docker build --pull -t rsds-security:${{ github.sha }} .
+      - name: Verify non-root read-only nginx and language routes
+        run: |
+          set -euo pipefail
+          trap 'docker logs nginx-smoke; docker rm -f nginx-smoke' EXIT
+          docker run -d --name nginx-smoke --read-only --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --tmpfs /tmp:rw,noexec,nosuid,size=64m,mode=1777 \
+            -p 127.0.0.1:18080:8080 rsds-security:${{ github.sha }}
+          curl --fail --silent --show-error --retry 20 --retry-connrefused --retry-delay 1 --max-time 3 http://127.0.0.1:18080/ -o /tmp/home.html
+          grep -qi '<html' /tmp/home.html
+          curl --fail --silent --show-error http://127.0.0.1:18080/pl/ -o /tmp/polish.html
+          grep -qi '<html' /tmp/polish.html
+          curl --fail --silent --show-error http://127.0.0.1:18080/styles.css -o /tmp/styles.css
+          test -s /tmp/styles.css
+          test "$(docker exec nginx-smoke id -u)" = 101
+          docker exec nginx-smoke touch /tmp/write-check
+          if docker exec nginx-smoke touch /usr/share/nginx/html/write-check; then
+            echo 'Root filesystem unexpectedly writable'
+            exit 1
+          fi
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          version: v0.76.1
+          scan-type: image
+          image-ref: rsds-security:${{ github.sha }}
+          scanners: vuln,secret
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: false

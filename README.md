@@ -19,7 +19,7 @@ rsds-infra-company-page
 │   └── logo.png         # organization and social-preview logo
 ├── scripts
 │   └── validate-seo.py  # validates the search-facing contract
-├── Dockerfile           # nginx:alpine serving public/ on port 80
+├── Dockerfile           # non-root nginx serving public/ on port 8080
 └── .github/workflows
     ├── docker-build.yml   # builds and publishes main
     └── seo-validation.yml # validates every pushed branch
@@ -37,7 +37,9 @@ docker build -t rsds-infra-company-page .
 ## Run the image locally
 
 ```bash
-docker run --rm -p 8080:80 rsds-infra-company-page
+docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
+  --tmpfs /tmp:rw,noexec,nosuid,size=64m,mode=1777 \
+  -p 8080:8080 rsds-infra-company-page
 ```
 
 Then open:
@@ -49,6 +51,7 @@ http://localhost:8080
 ## Validate search metadata
 
 ```bash
+python -m pip install -r scripts/requirements.txt
 python scripts/validate-seo.py
 ```
 
@@ -117,3 +120,9 @@ Console and Bing Webmaster Tools, verify it with DNS, submit
 Bing recommends IndexNow for faster update discovery. Add it only when an API key
 and a post-deployment hook are available; an image build does not prove that the
 new URLs are already live and should not submit them prematurely.
+
+
+## Security runtime and deployment compatibility
+The image runs nginx directly as UID/GID 101 on port 8080 and supports a read-only root filesystem with writable /tmp. Alpine security packages are upgraded during build, and Trivy must pass before publishing. Deploy the companion rsds-infra-helm PR #4 configuration (service.targetPort=8080) before publishing/rolling out this image; older charts targeting port 80 are incompatible. The public Service/Ingress ports remain unchanged. CI checks English/Polish pages and CSS under the restricted runtime.
+
+Semgrep exceptions are limited to canonical/hreflang metadata links: these do not load script/style subresources, so SRI does not apply. No executable-resource integrity rule is globally disabled. XML sitemap validation uses defusedxml to reject unsafe XML.
