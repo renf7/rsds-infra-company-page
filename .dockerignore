@@ -16,3 +16,7 @@ README.md
 Thumbs.db
 __pycache__/
 *.py[cod]
+
+# Development-only static analysis tooling
+node_modules
+coverage
