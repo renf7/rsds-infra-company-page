@@ -4,6 +4,7 @@ import { App } from '../src/App';
 import { replaceLocation } from '../src/browser';
 
 vi.mock('../src/browser', () => ({ replaceLocation: vi.fn() }));
+vi.mock('../src/AuthControls', () => ({ AuthControls: () => null }));
 const countryFetch = vi.fn<typeof fetch>();
 beforeEach(() => {
   vi.mocked(replaceLocation).mockClear();
