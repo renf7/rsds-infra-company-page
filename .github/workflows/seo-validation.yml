@@ -1,6 +1,8 @@
 name: Validate SEO
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
   push:
 
 jobs:
