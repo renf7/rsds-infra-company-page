@@ -27,11 +27,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build image for scanning
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: ${{ env.PUSH == 'true' }}
+          load: true
+          push: false
           tags: |
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:git-${{ github.sha }}
+      - name: Scan image before publishing
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
+        with:
+          scan-type: image
+          image-ref: ${{ env.IMAGE }}:git-${{ github.sha }}
+          scanners: vuln,secret
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: false
+      - name: Publish scanned image
+        if: env.PUSH == 'true'
+        run: |
+          docker push "$IMAGE:latest"
+          docker push "$IMAGE:git-$GITHUB_SHA"
