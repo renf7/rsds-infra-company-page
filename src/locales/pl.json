@@ -1,0 +1,133 @@
+{
+  "home": "/pl/",
+  "homeLabel": "Strona główna RSD Software",
+  "logo": "../logo-icon.png",
+  "logoAlt": "Logo RSD Software",
+  "navigationLabel": "Nawigacja główna",
+  "languageLabel": "Wybór języka",
+  "navigation": [
+    {
+      "id": "java",
+      "label": "Java"
+    },
+    {
+      "id": "ai",
+      "label": "Wsparcie AI"
+    },
+    {
+      "id": "team",
+      "label": "Zespół"
+    },
+    {
+      "id": "services",
+      "label": "Usługi"
+    },
+    {
+      "id": "contact",
+      "label": "Kontakt"
+    }
+  ],
+  "hero": {
+    "eyebrow": "RSD Software · rsdsoftware.eu",
+    "heading": "Profesjonalne tworzenie oprogramowania Java ze wsparciem AI",
+    "description": "RSD Software to firma tworząca oprogramowanie Java. Wykorzystujemy AI, aby przyspieszać proces inżynierski, a odpowiedzialność za architekturę, jakość i rezultat pozostaje po stronie doświadczonych inżynierów.",
+    "primary": "Rozpocznij projekt",
+    "secondary": "Poznaj usługi"
+  },
+  "sections": [
+    {
+      "id": "java",
+      "className": "section",
+      "heading": "Tworzenie oprogramowania Java",
+      "lead": "Projektujemy i budujemy produkcyjne systemy backendowe w Javie. Od API i mikroserwisów po platformy przetwarzające duże ilości danych — skupiamy się na rozwiązaniach niezawodnych, łatwych w utrzymaniu i gotowych do skalowania.",
+      "cards": [
+        {
+          "heading": "Backend i API",
+          "description": "Usługi Spring Boot oraz API REST i event-driven projektowane z myślą o przejrzystości i trwałości."
+        },
+        {
+          "heading": "Architektura",
+          "description": "Pragmatyczna, dobrze udokumentowana architektura dopasowana do domeny i realnych potrzeb."
+        },
+        {
+          "heading": "Jakość i testy",
+          "description": "Testy automatyczne, przeglądy kodu i CI, dzięki którym zmiany trafiają na produkcję bezpiecznie i przewidywalnie."
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "className": "section section-alt",
+      "heading": "Inżynieria wspierana przez AI",
+      "lead": "AI wspiera nasz proces inżynierski: przyspiesza analizę, przeglądy kodu, refaktoryzację i dokumentowanie. Jest narzędziem w rękach inżynierów, a nie zamiennikiem ich wiedzy i odpowiedzialności.",
+      "cards": [
+        {
+          "heading": "Szybsza realizacja",
+          "description": "AI pomaga szybciej przechodzić przez powtarzalne zadania i analizę wariantów, abyśmy mogli skupić się na najtrudniejszych problemach."
+        },
+        {
+          "heading": "Weryfikacja przez człowieka",
+          "description": "Każda zmiana jest przeglądana i sprawdzana przez doświadczonych programistów przed wdrożeniem."
+        },
+        {
+          "heading": "Trafne decyzje",
+          "description": "Architektura, kompromisy techniczne i projekt rozwiązania pozostają odpowiedzialnością seniorów."
+        }
+      ]
+    },
+    {
+      "id": "team",
+      "className": "section",
+      "heading": "Doświadczeni specjaliści IT",
+      "lead": "Projekty prowadzą doświadczeni programiści Java, którzy budowali i utrzymywali systemy produkcyjne. Jesteśmy przede wszystkim inżynierami oprogramowania — nie twórcami promptów — i bierzemy odpowiedzialność za to, co dostarczamy.",
+      "cards": [
+        {
+          "heading": "Odpowiedzialność seniorów",
+          "description": "Każdy projekt prowadzą inżynierowie, którzy wdrażali, utrzymywali i skalowali systemy produkcyjne."
+        },
+        {
+          "heading": "Odpowiedzialna realizacja",
+          "description": "Odpowiadamy za jakość, bezpieczeństwo i utrzymywalność rozwiązania od początku do końca."
+        },
+        {
+          "heading": "Myślenie długoterminowe",
+          "description": "Budujemy oprogramowanie, które Twój zespół może rozumieć, rozwijać i bezpiecznie utrzymywać przez lata."
+        }
+      ]
+    },
+    {
+      "id": "services",
+      "className": "section section-alt",
+      "heading": "Usługi",
+      "lead": "Praktyczne usługi programistyczne dopasowane do Twoich celów.",
+      "cards": [
+        {
+          "heading": "Dedykowane oprogramowanie Java",
+          "description": "Nowe aplikacje i usługi tworzone z uwzględnieniem Twojej domeny i ograniczeń."
+        },
+        {
+          "heading": "Modernizacja systemów",
+          "description": "Refaktoryzacja, aktualizacje i przebudowa architektury istniejących systemów Java."
+        },
+        {
+          "heading": "API i integracje",
+          "description": "Niezawodne API oraz integracje między Twoimi systemami i platformami zewnętrznymi."
+        },
+        {
+          "heading": "Konsulting i przeglądy",
+          "description": "Przeglądy architektury, audyty kodu i wsparcie techniczne dla Twojego zespołu."
+        }
+      ]
+    }
+  ],
+  "certificatesLabel": "Certyfikaty zespołu",
+  "certificates": [
+    "Oracle Certified Professional: Java SE 11 Developer",
+    "Java Programmer, Oracle Certified Professional 6"
+  ],
+  "contact": {
+    "heading": "Zbudujmy razem coś niezawodnego",
+    "description": "Opowiedz nam o swoim projekcie, a skontaktujemy się z Tobą. Realizację prowadzą doświadczeni inżynierowie Java wspierani przez AI."
+  },
+  "footer": "Niezawodne oprogramowanie Java, wsparcie AI i doświadczeni specjaliści."
+}

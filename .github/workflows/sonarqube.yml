@@ -39,6 +39,11 @@ jobs:
             exit 1
           fi
           test -n "$SONAR_PROJECT_KEY" || { echo 'Repository name is unavailable'; exit 1; }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Test real React code and collect coverage
+        run: npm ci --ignore-scripts --no-audit --no-fund && npm run typecheck && npm run test:coverage
       - name: Ensure existing Sonar project is public
         env:
           REPOSITORY_PRIVATE: ${{ github.event.repository.private }}

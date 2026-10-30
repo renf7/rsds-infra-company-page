@@ -1,0 +1,46 @@
+name: React build and browser regression
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: react-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Verify types and unit tests, then build production pages
+        run: npm ci --ignore-scripts --no-audit --no-fund && npm run typecheck && npm run test:coverage && npm run build
+      - name: Check out the reviewed headless suite
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: renf7/rsds-infra-local
+          ref: 57c2b731760ceb77522539c2171a4cf4e5f4a999
+          path: .validation/runner
+          persist-credentials: false
+      - name: Freeze pre-migration static source
+        run: git worktree add --detach .validation/static d8eabc402529f57a245134007c362e456d1f0042
+      - name: Run 16 behavior tests, no-JavaScript routes and exact visual comparisons
+        run: bash tests/browser/check.sh
+      - name: Retain browser results and coverage
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: react-regression
+          include-hidden-files: true
+          path: |
+            .validation/artifacts/
+            coverage/lcov.info

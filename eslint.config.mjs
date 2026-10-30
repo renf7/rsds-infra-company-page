@@ -7,7 +7,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 const sourceFiles = ['**/*.{js,jsx,ts,tsx}'];
 
 export default [
-  { ignores: ['node_modules/**', 'dist/**', 'coverage/**', '.scannerwork/**'] },
+  { ignores: ['node_modules/**', 'dist/**', 'coverage/**', '.scannerwork/**', '.local*/**', '.validation/**'] },
   { ...js.configs.recommended, files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'] },
   {
     files: sourceFiles,
@@ -34,4 +34,5 @@ export default [
     },
   },
   { files: ['**/*.{mjs,cjs}', '*config.js'], languageOptions: { globals: globals.node } },
+  { files: ['scripts/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}', 'vite.config.ts'], languageOptions: { globals: globals.node } },
 ];

@@ -1,6 +1,6 @@
 # rsds-infra-company-page
 
-Static company website for **RSD Software** (rsdsoftware.eu), served by nginx.
+React and TypeScript company website for **RSD Software**, built with Vite and served by nginx. Tracking: [RSDSINFRA-5](https://rsdsoftware.atlassian.net/browse/RSDSINFRA-5).
 
 RSD Software builds robust Java software with AI-powered support, delivered by experienced
 software professionals. This repository contains the marketing landing page and the
@@ -11,22 +11,59 @@ Docker packaging used to ship it.
 ```
 rsds-infra-company-page
 ├── public
-│   ├── index.html       # English landing page
-│   ├── pl/index.html    # Polish landing page
 │   ├── robots.txt       # crawler rules and sitemap discovery
 │   ├── sitemap.xml      # localized page discovery
-│   ├── styles.css       # plain CSS, responsive, no build tools
+│   ├── styles.css       # preserved production responsive CSS
 │   └── logo.png         # organization and social-preview logo
+├── src                  # reusable components, typed EN/PL content and language hook
+├── index.html           # English metadata and Vite entry
+├── pl/index.html        # Polish metadata and Vite entry
 ├── scripts
-│   └── validate-seo.py  # validates the search-facing contract
-├── Dockerfile           # non-root nginx serving public/ on port 8080
+│   ├── prerender.tsx    # complete localized HTML at build time
+│   └── validate-seo.py  # validates generated dist/ output
+├── tests                # unit contracts, frozen static fixtures and browser comparisons
+├── Dockerfile           # Node build, non-root nginx serving dist/ on port 8080
 └── .github/workflows
     ├── docker-build.yml   # builds and publishes main
     └── seo-validation.yml # validates every pushed branch
 ```
 
-The site uses static HTML, CSS, and a small JavaScript language selector. There is
-no application framework or frontend build step.
+The two language entries share React components and typed localized content. Build-time pre-rendering plus browser hydration retains complete indexable HTML without a production Node server. Original CSS/assets and native anchors remain intact. Two known language entry points do not need a router dependency.
+
+## Development and tests
+
+Use Node 24 LTS (24.15 or newer within that major) and npm. Exact dependencies are locked; do not force incompatible peer dependencies. Docker builds require no host Node installation.
+
+```sh
+npm ci --ignore-scripts
+npm run dev
+```
+
+Open the displayed Vite URL (normally `http://localhost:5173/`); Polish is `/pl/`. Verify production output with:
+
+```sh
+npm run typecheck
+npm run lint
+npm run test:coverage
+npm run build
+npm run preview
+```
+
+Vitest/Testing Library test frozen EN/PL DOM/content, storage/country/timeout language behavior, hydration and pre-rendering. Coverage thresholds are 80% for lines, statements, branches and functions. See [migration evidence](docs/react-migration-plan.md) and [version compatibility](SCANNER-VERSIONS.md).
+
+## Headless browser and Helm checks
+
+React CI runs the 16 existing headless behavior tests from a pinned `rsds-infra-local` revision against the production image. It also tests direct navigation/refresh without JavaScript on `/`, `/index.html`, `/pl/` and `/pl/index.html`; four EN/PL desktop/mobile screenshot comparisons require zero differing pixels against pre-migration commit `d8eabc402529f57a245134007c362e456d1f0042`. Browser reports, screenshots and coverage are retained as CI artifacts. Containers are built without publishing or deploying production.
+
+For the actual chart on your own Docker engine, follow the [local runner runbook](https://github.com/renf7/rsds-infra-local/blob/RSDSINFRA-25-local-testing/README.md), build its implementation branch, and run from that repository root:
+
+```powershell
+.\out\rsds-local.exe up --docker-context desktop-linux --pr rsds-infra-company-page=8 --e2e --port 18089 --workdir .local-react-review
+.\out\rsds-local.exe status --workdir .local-react-review
+.\out\rsds-local.exe down --workdir .local-react-review
+```
+
+Use your actual local context; Linux/macOS use `./out/rsds-local`. Unspecified repositories use their default branches. E2E is disabled unless `--e2e` is explicitly supplied. Require the report's intended PR head, `status=PASS`, `e2eEnabled=true` and 16 passing tests. Run `down` after reviewing; reports are preserved. Local use needs no GitHub/Sonar token, cloud credentials or host browser.
 
 ## Build the image locally
 
@@ -51,12 +88,13 @@ http://localhost:8080
 ## Validate search metadata
 
 ```bash
+npm run build
 python -m pip install -r scripts/requirements.txt
 python scripts/validate-seo.py
 ```
 
 The same validation runs automatically after every push to any branch. It checks
-language declarations and selection behavior, titles, descriptions, headings,
+language declarations, titles, descriptions, headings,
 canonical URLs, reciprocal `hreflang` links, local assets, social metadata,
 structured data, `robots.txt`, and `sitemap.xml`.
 
@@ -123,6 +161,6 @@ new URLs are already live and should not submit them prematurely.
 
 
 ## Security runtime and deployment compatibility
-The image runs nginx directly as UID/GID 101 on port 8080 and supports a read-only root filesystem with writable /tmp. Alpine security packages are upgraded during build, and Trivy must pass before publishing. Deploy the companion rsds-infra-helm PR #4 configuration (service.targetPort=8080) before publishing/rolling out this image; older charts targeting port 80 are incompatible. The public Service/Ingress ports remain unchanged. CI checks English/Polish pages and CSS under the restricted runtime.
+The image runs nginx directly as UID/GID 101 on port 8080 and supports a read-only root filesystem with writable /tmp. Alpine security packages are upgraded during build, and Trivy must pass before publishing. Helm's default branch includes PR #4's hardened runtime (service.targetPort=8080); older charts targeting container port 80 are incompatible. Public Service/Ingress ports remain unchanged. CI checks English/Polish pages and CSS under the restricted runtime.
 
 Semgrep exceptions are limited to canonical/hreflang metadata links: these do not load script/style subresources, so SRI does not apply. No executable-resource integrity rule is globally disabled. XML sitemap validation uses defusedxml to reject unsafe XML.

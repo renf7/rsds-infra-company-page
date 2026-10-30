@@ -20,3 +20,7 @@ __pycache__/
 # Development-only static analysis tooling
 node_modules
 coverage
+dist
+.local*
+.validation
+tests
