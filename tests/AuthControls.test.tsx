@@ -18,6 +18,15 @@ it('opens an accessible modal with backend-managed provider links and restores f
   for (const provider of api.providerNames) {
     expect(await screen.findByRole('link', { name: api.providerLabels[provider] })).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
   }
+  const first = screen.getByRole('link', { name: 'Facebook' });
+  const close = screen.getByRole('button', { name: 'Close' });
+  close.focus();
+  fireEvent.keyDown(close, { key: 'Tab' });
+  expect(first).toHaveFocus();
+  fireEvent.keyDown(first, { key: 'Tab', shiftKey: true });
+  expect(close).toHaveFocus();
+  fireEvent.keyDown(close, { key: 'ArrowRight' });
+  expect(close).toHaveFocus();
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(button).toHaveFocus();
