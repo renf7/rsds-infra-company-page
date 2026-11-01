@@ -12,3 +12,5 @@
 @media (max-width: 800px) { .header-inner { gap: 10px; } .site-nav { gap: 12px; } .auth-button-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 @media (max-width: 360px) { .header-inner { gap: 6px; } .auth-button { padding: 6px; } }
 
+.auth-input { display:block; width:100%; box-sizing:border-box; margin:10px 0 16px; padding:12px; border:1px solid #586682; border-radius:8px; background:#0b1220; color:#fff; font:inherit; }
+.auth-input:focus-visible { outline:2px solid #91b8ff; outline-offset:2px; }
