@@ -2,8 +2,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { AuthControls } from '../src/AuthControls';
 import * as api from '../src/auth-api';
-vi.mock('../src/auth-api', async original => ({ ...await original<typeof api>(), session: vi.fn(), providers: vi.fn(), action: vi.fn() }));
+vi.mock('../src/auth-api', async original => ({ ...await original<typeof api>(), session: vi.fn(), providers: vi.fn(), action: vi.fn(), emailChallenge: vi.fn(), emailAction: vi.fn() }));
 beforeEach(() => {
+  history.replaceState(null, '', '/');
   vi.mocked(api.session).mockResolvedValue({ authenticated: false });
   vi.mocked(api.providers).mockResolvedValue(api.providerNames.map(id => ({ id, enabled: true })));
   vi.mocked(api.action).mockResolvedValue();
@@ -16,9 +17,9 @@ it('opens an accessible modal with backend-managed provider links and restores f
   fireEvent.click(button);
   expect(screen.getByRole('dialog')).toHaveAccessibleName('Log in');
   for (const provider of api.providerNames) {
-    expect(await screen.findByRole('link', { name: api.providerLabels[provider] })).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
+    expect(await screen.findByRole('link', { name: "Continue with " + api.providerLabels[provider] })).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
   }
-  const first = screen.getByRole('link', { name: 'Facebook' });
+  const first = screen.getByRole('link', { name: 'Continue with Facebook' });
   const close = screen.getByRole('button', { name: 'Close' });
   close.focus();
   fireEvent.keyDown(close, { key: 'Tab' });
@@ -43,7 +44,7 @@ it('provides Polish labels and does not enable unavailable providers', async () 
   render(<AuthControls language="pl" />);
   fireEvent.click(screen.getByRole('button', { name: 'Zaloguj się' }));
   await waitFor(() => { expect(api.providers).toHaveBeenCalledOnce(); });
-  expect(screen.getByRole('button', { name: 'Google' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Kontynuuj z Google' })).toBeDisabled();
   expect(screen.getByRole('button', { name: 'Zamknij' })).toBeVisible();
 });
 it('shows a safe actionable provider failure without token details', async () => {
@@ -57,4 +58,21 @@ it('keeps the page usable when session lookup or provider availability fails', a
   render(<AuthControls language="en" />);
   fireEvent.click(screen.getByRole('button', { name: 'Log in' }));
   expect(await screen.findByText('Sign-in is temporarily unavailable.', { selector: '.auth-error' })).toBeInTheDocument();
+});
+it('opens email verification after the provider callback and resolves the internal account', async () => {
+  history.replaceState(null, '', '/?login=verify');
+  vi.mocked(api.emailChallenge).mockResolvedValue({ needsEmail: false, maskedEmail: 'a***@example.test' });
+  vi.mocked(api.emailAction).mockResolvedValue();
+  vi.mocked(api.session).mockResolvedValueOnce({ authenticated: false }).mockResolvedValue({ authenticated: true, name: 'Alice', email: 'alice@example.test' });
+  render(<AuthControls language="en" />);
+  fireEvent.change(await screen.findByLabelText('Verification code'), { target: { value: '123456' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Verify and continue' }));
+  expect(await screen.findByRole('button', { name: 'Log out' })).toBeVisible();
+  expect(window.location.search).toBe('');
+});
+it('shows a safe error if a pending email challenge expired', async () => {
+  history.replaceState(null, '', '/?login=verify');
+  vi.mocked(api.emailChallenge).mockRejectedValue(new Error('expired'));
+  render(<AuthControls language="pl" />);
+  expect(await screen.findByRole('alert')).toHaveTextContent('Rozpocznij logowanie');
 });
