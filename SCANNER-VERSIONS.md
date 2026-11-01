@@ -37,3 +37,10 @@ References:
 - https://eslint.org/version-support/
 - https://typescript-eslint.io/users/dependency-versions/
 - https://registry.npmjs.org/eslint-plugin-jsx-a11y/latest
+
+## Dependency consolidation — RSDSINFRA-27
+
+Combined Dependabot PRs #10 (setup-python 7.1.0), #11 (build-push-action 7.4.0), #12 (setup-node 7.1.0) and #14 (login-action 4.7.0). PRs #13 (ESLint 10.13.0) and #15 (@eslint/js 10.0.1) are deferred: npm metadata rechecked on 30 October 2026 still gives eslint-plugin-jsx-a11y 6.10.2 an ESLint peer range ending at 9. Retain the existing explicit compatibility exception; no forced peer resolution, accessibility-rule removal or paid support. Revisit both upgrades together when supported.
+
+Tracking: https://rsdsoftware.atlassian.net/browse/RSDSINFRA-27. Validate both consolidated PR heads with the local runner and explicit --e2e; browser tests stay disabled by default. PR workflows remain non-deploying.
+
