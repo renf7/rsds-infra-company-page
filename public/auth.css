@@ -1,5 +1,6 @@
 /* Isolated additions: existing marketing CSS stays unchanged. */
-.auth-controls { flex-shrink: 0; }
+.auth-controls { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+.account-avatar { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; flex-shrink:0; border-radius:50%; background:#1e40af; color:#fff; font-size:12px; font-weight:700; letter-spacing:.03em; }
 .auth-button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); padding: 8px 10px; font: inherit; cursor: pointer; }
 .auth-button:focus-visible, .auth-dialog a:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
 .auth-error { position: absolute; right: 20px; top: 100%; max-width: min(90vw,400px); padding: 12px; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 8px; }

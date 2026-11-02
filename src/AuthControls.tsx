@@ -59,7 +59,7 @@ export function AuthControls({ language }: { language: Language }) {
   };
   return <div className="auth-controls" data-auth-ui="true">
     {identity.authenticated
-      ? <button type="button" className="auth-button" title={identity.name} aria-label={polish ? 'Wyloguj' : 'Log out'} onClick={logout}><span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Wyloguj' : 'Log out'}</span></button>
+      ? <><span role="img" data-testid="account-avatar" className="account-avatar" aria-label={(polish ? 'Konto: ' : 'Account: ') + (identity.name ?? '')} style={{ backgroundColor: identity.avatarColor }}>{identity.initials ?? 'UU'}</span><button type="button" className="auth-button" title={identity.name} aria-label={polish ? 'Wyloguj' : 'Log out'} onClick={logout}><span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Wyloguj' : 'Log out'}</span></button></>
       : <button ref={button} type="button" className="auth-button" aria-label={polish ? 'Zaloguj się' : 'Log in'} onClick={open}>
         <span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Zaloguj się' : 'Log in'}</span>
       </button>}
