@@ -11,6 +11,15 @@ beforeEach(() => {
   HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); };
   HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); };
 });
+it('shows the saved account initials and permanent colour after login', async () => {
+  vi.mocked(api.session).mockResolvedValue({ authenticated: true, name: 'Alice Lee', initials: 'AL', avatarColor: '#1e40af' });
+  render(<AuthControls language="en" />);
+  const avatar = await screen.findByTestId('account-avatar');
+  expect(avatar).toHaveTextContent('AL');
+  expect(avatar).toHaveStyle({ backgroundColor: '#1e40af' });
+  expect(avatar).toHaveAccessibleName('Account: Alice Lee');
+  expect(screen.getByRole('button', { name: 'Log out' })).toBeVisible();
+});
 it('opens an accessible modal with backend-managed provider links and restores focus', async () => {
   render(<AuthControls language="en" />);
   const button = screen.getByRole('button', { name: 'Log in' });

@@ -1,4 +1,4 @@
-export interface Session { authenticated: boolean; name?: string; email?: string; roles?: readonly string[] }
+export interface Session { authenticated: boolean; name?: string; email?: string; roles?: readonly string[]; initials?: string; avatarColor?: string }
 export const providerNames = ['facebook', 'microsoft', 'google', 'apple', 'github'] as const;
 export type Provider = typeof providerNames[number];
 export const providerLabels: Record<Provider, string> = { facebook: 'Facebook', microsoft: 'Microsoft', google: 'Google', apple: 'Apple', github: 'GitHub' };
