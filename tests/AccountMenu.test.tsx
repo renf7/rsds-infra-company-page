@@ -34,10 +34,12 @@ it('supports keyboard context menu and menu navigation without trapping Tab', ()
   const avatar = screen.getByTestId('account-avatar');
   fireEvent.keyDown(avatar, { key: 'F10', shiftKey: true });
   const item = screen.getByRole('menuitem', { name: 'Log out' });
-  for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End']) {
-    fireEvent.keyDown(item, { key });
-    expect(item).toHaveFocus();
-  }
+  const settings = screen.getByRole('menuitem', { name: 'Settings' });
+  expect(settings).toHaveAttribute('href', '/settings/');
+  fireEvent.keyDown(item, { key: 'ArrowDown' }); expect(settings).toHaveFocus();
+  fireEvent.keyDown(settings, { key: 'ArrowUp' }); expect(item).toHaveFocus();
+  fireEvent.keyDown(item, { key: 'End' }); expect(settings).toHaveFocus();
+  fireEvent.keyDown(settings, { key: 'Home' }); expect(item).toHaveFocus();
   fireEvent.keyDown(item, { key: 'Tab' });
   expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 });
