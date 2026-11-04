@@ -39,11 +39,19 @@ export function AccountMenu({ name, initials, color, language, onLogout }: Props
       onKeyDown={event => {
         if (event.key === 'Escape') { event.preventDefault(); close(); }
         if (event.key === 'Tab') close();
-        if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) { event.preventDefault(); item.current?.focus(); }
+        if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+          event.preventDefault();
+          const items = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+          const current = items.findIndex(control => control === document.activeElement);
+          const next = event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1
+            : (current + (event.key === 'ArrowUp' ? -1 : 1) + items.length) % items.length;
+          items[next]?.focus();
+        }
       }}>
       <button ref={item} type="button" role="menuitem" onClick={() => { close(); onLogout(); }}>
         {language === 'pl' ? 'Wyloguj' : 'Log out'}
       </button>
+      <a role="menuitem" href={language === 'pl' ? '/pl/settings/' : '/settings/'}>{language === 'pl' ? 'Ustawienia' : 'Settings'}</a>
     </div>}
   </div>;
 }

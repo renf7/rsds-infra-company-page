@@ -58,3 +58,26 @@ it('rejects an expired pending login challenge', async () => {
   vi.stubGlobal('fetch', vi.fn<typeof fetch>().mockResolvedValue(new Response('', { status: 401 })));
   await expect(emailChallenge()).rejects.toThrow('Sign in again');
 });
+it('loads protected contact settings and saves optional email with CSRF using PUT', async () => {
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(Response.json({ email: '', emailVerified: false }))
+    .mockResolvedValueOnce(Response.json({ token: 'csrf' })).mockResolvedValueOnce(new Response(null, { status: 204 }));
+  vi.stubGlobal('fetch', fetcher);
+  const api = await import('../src/auth-api');
+  expect((await api.accountSettings()).email).toBe('');
+  await api.saveContactEmail('contact@example.test');
+  expect(fetcher).toHaveBeenCalledWith('/api/auth/settings', expect.objectContaining({ method: 'PUT', credentials: 'same-origin', headers: { 'X-XSRF-TOKEN': 'csrf', 'Content-Type': 'application/json' } }));
+});
+it('rejects inaccessible account settings', async () => {
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>().mockResolvedValue(new Response('', { status: 401 })));
+  const api = await import('../src/auth-api');
+  await expect(api.accountSettings()).rejects.toThrow('Settings unavailable');
+});
+it('shares an in-flight refresh between header and settings session lookups', async () => {
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(Response.json({ authenticated: false, refreshAvailable: true }))
+    .mockResolvedValueOnce(Response.json({ token: 'csrf' })).mockResolvedValueOnce(new Response(null, { status: 204 }))
+    .mockResolvedValueOnce(Response.json({ authenticated: true }));
+  vi.stubGlobal('fetch', fetcher);
+  const result = await Promise.all([session(), session()]);
+  expect(result.every(value => value.authenticated)).toBe(true);
+  expect(fetcher).toHaveBeenCalledTimes(4);
+});
