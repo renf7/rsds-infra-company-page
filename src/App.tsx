@@ -6,7 +6,7 @@ export function Header({ page, language, homeNavigation = false, settings = fals
   return <header className="site-header">
     <div className="container header-inner">
       <a className="brand" href={page.home} aria-label={page.homeLabel}>
-        <img className="brand-logo" src={page.logo} alt={page.logoAlt} width="56" height="56" />
+        <img className="brand-logo" src={settings ? '/logo-icon.png' : page.logo} alt={page.logoAlt} width="56" height="56" />
       </a>
       <nav className="site-nav" aria-label={page.navigationLabel}>
         {page.navigation.map(link => <a key={link.id} className={link.id === 'contact' ? 'nav-cta' : undefined} href={`${homeNavigation || settings ? page.home : ''}#${link.id}`}>{link.label}</a>)}
