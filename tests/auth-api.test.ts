@@ -15,6 +15,27 @@ it('performs a CSRF-protected refresh before retrying an expired session', async
   expect((await session()).authenticated).toBe(true);
   expect(fetcher).toHaveBeenCalledWith('/api/auth/refresh', expect.objectContaining({ method: 'POST', headers: { 'X-XSRF-TOKEN': 'csrf-value' } }));
 });
+it('recovers a missing access cookie when the backend reports an available refresh cookie', async () => {
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(Response.json({ authenticated: false, refreshAvailable: true }))
+    .mockResolvedValueOnce(Response.json({ token: 'csrf' })).mockResolvedValueOnce(new Response(null, { status: 204 }))
+    .mockResolvedValueOnce(Response.json({ authenticated: true, initials: 'AL' }));
+  vi.stubGlobal('fetch', fetcher);
+  expect((await session()).authenticated).toBe(true);
+  expect(fetcher).toHaveBeenCalledTimes(4);
+});
+it('does not attempt refresh for a visitor with no refresh cookie', async () => {
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValue(Response.json({ authenticated: false, refreshAvailable: false }));
+  vi.stubGlobal('fetch', fetcher);
+  expect((await session()).authenticated).toBe(false);
+  expect(fetcher).toHaveBeenCalledOnce();
+});
+it('stops after one rejected refresh instead of inventing authentication', async () => {
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(Response.json({ authenticated: false, refreshAvailable: true }))
+    .mockResolvedValueOnce(Response.json({ token: 'csrf' })).mockResolvedValueOnce(new Response('', { status: 401 }));
+  vi.stubGlobal('fetch', fetcher);
+  expect((await session()).authenticated).toBe(false);
+  expect(fetcher).toHaveBeenCalledTimes(3);
+});
 it('does not invent authentication when the backend rejects the request', async () => {
   vi.stubGlobal('fetch', vi.fn<typeof fetch>().mockResolvedValue(new Response('', { status: 503 })));
   expect(await session()).toEqual({ authenticated: false });

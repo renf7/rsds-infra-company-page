@@ -1,4 +1,4 @@
-export interface Session { authenticated: boolean; name?: string; email?: string; roles?: readonly string[]; initials?: string; avatarColor?: string }
+export interface Session { authenticated: boolean; refreshAvailable?: boolean; name?: string; email?: string; roles?: readonly string[]; initials?: string; avatarColor?: string }
 export const providerNames = ['facebook', 'microsoft', 'google', 'apple', 'github'] as const;
 export type Provider = typeof providerNames[number];
 export const providerLabels: Record<Provider, string> = { facebook: 'Facebook', microsoft: 'Microsoft', google: 'Google', apple: 'Apple', github: 'GitHub' };
@@ -14,12 +14,13 @@ export async function emailAction(name: 'email-code' | 'verify-email', data: { e
 }
 export async function session(): Promise<Session> {
   let response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' });
-  if (response.status === 401) {
-    await action('refresh');
+  const initial = response.ok ? await response.json() as Session : { authenticated: false };
+  if (response.status === 401 || (!initial.authenticated && initial.refreshAvailable)) {
+    try { await action('refresh'); } catch { return { authenticated: false }; }
     response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' });
+    return response.ok ? await response.json() as Session : { authenticated: false };
   }
-  if (!response.ok) return { authenticated: false };
-  return await response.json() as Session;
+  return initial;
 }
 export async function providers(): Promise<readonly AvailableProvider[]> {
   const response = await fetch('/api/auth/providers', { credentials: 'same-origin', cache: 'no-store' });

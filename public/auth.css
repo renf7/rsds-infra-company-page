@@ -1,6 +1,11 @@
 /* Isolated additions: existing marketing CSS stays unchanged. */
 .auth-controls { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
-.account-avatar { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; flex-shrink:0; border-radius:50%; background:#1e40af; color:#fff; font-size:12px; font-weight:700; letter-spacing:.03em; }
+.account-menu { position:relative; flex-shrink:0; }
+.account-avatar { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; flex-shrink:0; padding:0; border:0; border-radius:50%; background:#1e40af; color:#fff; font-family:inherit; font-size:12px; font-weight:700; letter-spacing:.03em; cursor:pointer; }
+.account-menu-popup { position:absolute; right:0; top:calc(100% + 8px); z-index:20; min-width:160px; max-width:calc(100vw - 32px); padding:6px; border:1px solid var(--border); border-radius:8px; background:var(--surface); box-shadow:0 8px 24px rgb(0 0 0 / 25%); }
+.account-menu-popup button { display:block; width:100%; min-height:44px; padding:8px 12px; border:0; border-radius:4px; background:transparent; color:var(--text); font:inherit; text-align:start; cursor:pointer; }
+.account-menu-popup button:hover, .account-menu-popup button:focus-visible { background:var(--bg-alt); }
+.account-avatar:focus-visible, .account-menu-popup button:focus-visible { outline:3px solid var(--brand); outline-offset:3px; }
 .auth-button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); padding: 8px 10px; font: inherit; cursor: pointer; }
 .auth-button:focus-visible, .auth-dialog a:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
 .auth-error { position: absolute; right: 20px; top: 100%; max-width: min(90vw,400px); padding: 12px; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 8px; }
