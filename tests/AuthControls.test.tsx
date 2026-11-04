@@ -18,7 +18,9 @@ it('shows the saved account initials and permanent colour after login', async ()
   expect(avatar).toHaveTextContent('AL');
   expect(avatar).toHaveStyle({ backgroundColor: '#1e40af' });
   expect(avatar).toHaveAccessibleName('Account: Alice Lee');
-  expect(screen.getByRole('button', { name: 'Log out' })).toBeVisible();
+  expect(screen.queryByRole('button', { name: 'Log out' })).not.toBeInTheDocument();
+  fireEvent.click(avatar);
+  expect(screen.getByRole('menuitem', { name: 'Log out' })).toBeVisible();
 });
 it('opens an accessible modal with backend-managed provider links and restores focus', async () => {
   render(<AuthControls language="en" />);
@@ -44,7 +46,8 @@ it('opens an accessible modal with backend-managed provider links and restores f
 it('renders the authenticated session and logs out through the CSRF-aware API', async () => {
   vi.mocked(api.session).mockResolvedValue({ authenticated: true, name: 'Alice', roles: [] });
   render(<AuthControls language="en" />);
-  fireEvent.click(await screen.findByRole('button', { name: 'Log out' }));
+  fireEvent.click(await screen.findByTestId('account-avatar'));
+  fireEvent.click(screen.getByRole('menuitem', { name: 'Log out' }));
   await waitFor(() => { expect(api.action).toHaveBeenCalledWith('logout'); });
   expect(await screen.findByRole('button', { name: 'Log in' })).toBeVisible();
 });
@@ -76,7 +79,7 @@ it('opens email verification after the provider callback and resolves the intern
   render(<AuthControls language="en" />);
   fireEvent.change(await screen.findByLabelText('Verification code'), { target: { value: '123456' } });
   fireEvent.click(screen.getByRole('button', { name: 'Verify and continue' }));
-  expect(await screen.findByRole('button', { name: 'Log out' })).toBeVisible();
+  expect(await screen.findByTestId('account-avatar')).toBeVisible();
   expect(window.location.search).toBe('');
 });
 it('shows a safe error if a pending email challenge expired', async () => {

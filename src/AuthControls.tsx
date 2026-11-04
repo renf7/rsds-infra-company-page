@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { action, emailChallenge, providers, providerNames, providerLabels, session, type AvailableProvider, type Session, type EmailChallenge } from './auth-api';
 import { EmailVerificationForm } from './EmailVerificationForm';
+import { AccountMenu } from './AccountMenu';
 import type { Language } from './content';
 
 export function AuthControls({ language }: { language: Language }) {
@@ -59,7 +60,7 @@ export function AuthControls({ language }: { language: Language }) {
   };
   return <div className="auth-controls" data-auth-ui="true">
     {identity.authenticated
-      ? <><span role="img" data-testid="account-avatar" className="account-avatar" aria-label={(polish ? 'Konto: ' : 'Account: ') + (identity.name ?? '')} style={{ backgroundColor: identity.avatarColor }}>{identity.initials ?? 'UU'}</span><button type="button" className="auth-button" title={identity.name} aria-label={polish ? 'Wyloguj' : 'Log out'} onClick={logout}><span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Wyloguj' : 'Log out'}</span></button></>
+      ? <AccountMenu name={identity.name} initials={identity.initials} color={identity.avatarColor} language={language} onLogout={logout} />
       : <button ref={button} type="button" className="auth-button" aria-label={polish ? 'Zaloguj się' : 'Log in'} onClick={open}>
         <span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Zaloguj się' : 'Log in'}</span>
       </button>}
