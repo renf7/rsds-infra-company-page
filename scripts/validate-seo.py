@@ -156,6 +156,10 @@ def local_path_for_reference(page_path, reference):
 
     if parsed.path.endswith("/"):
         path /= "index.html"
+    # Match the explicit extensionless route in nginx.conf; the target file must
+    # still exist, just like every other checked internal link.
+    if path == PUBLIC / "privacy-policy":
+        path = PUBLIC / "privacy-policy.html"
 
     try:
         resolved = path.resolve()
