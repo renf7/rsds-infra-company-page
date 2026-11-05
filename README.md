@@ -164,3 +164,6 @@ new URLs are already live and should not submit them prematurely.
 The image runs nginx directly as UID/GID 101 on port 8080 and supports a read-only root filesystem with writable /tmp. Alpine security packages are upgraded during build, and Trivy must pass before publishing. Helm's default branch includes PR #4's hardened runtime (service.targetPort=8080); older charts targeting container port 80 are incompatible. Public Service/Ingress ports remain unchanged. CI checks English/Polish pages and CSS under the restricted runtime.
 
 Semgrep exceptions are limited to canonical/hreflang metadata links: these do not load script/style subresources, so SRI does not apply. No executable-resource integrity rule is globally disabled. XML sitemap validation uses defusedxml to reject unsafe XML.
+
+## Facebook Pages privacy policy
+The English public document is served at /privacy-policy with the title Privacy Policy | RSD Software and linked from both home-page footers. It concerns the separate, currently unimplemented RSD Software EU (API access) Pages integration, not website SSO. See [policy facts, publication controls and release checks](docs/privacy/README.md). Run npm run privacy:verify before release, confirm the actual publication date and check the public HTTPS URL after deployment; a passing PR or local build does not prove production publication.

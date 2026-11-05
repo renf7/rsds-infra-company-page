@@ -6,7 +6,7 @@ prefix="rsds-react-${GITHUB_RUN_ID:-local}-validation"
 artifacts="$(pwd)/.validation/artifacts"
 mkdir -p "$artifacts"
 cleanup() {
-  docker rm -f "$prefix-e2e" "$prefix-visual" "$prefix-candidate" "$prefix-baseline" >/dev/null 2>&1 || true
+  docker rm -f "$prefix-e2e" "$prefix-visual" "$prefix-privacy" "$prefix-candidate" "$prefix-baseline" >/dev/null 2>&1 || true
   docker network rm "$prefix" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
@@ -36,3 +36,6 @@ run_browser e2e --env BASE_URL=http://candidate:8080 "$prefix-browser"
 run_browser visual --env BASELINE_URL=http://baseline:8080 --env CANDIDATE_URL=http://candidate:8080 \
   --mount "type=bind,source=$(pwd)/tests/browser/visual.py,target=/visual.py,readonly" \
   "$prefix-browser" python /visual.py
+run_browser privacy --env CANDIDATE_URL=http://candidate:8080 \
+  --mount "type=bind,source=$(pwd)/tests/browser/privacy.py,target=/privacy.py,readonly" \
+  "$prefix-browser" python /privacy.py

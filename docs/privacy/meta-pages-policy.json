@@ -1,0 +1,11 @@
+{
+  "status": "approved",
+  "publicationDate": "2026-11-05",
+  "controllerName": "Rafal Szymon Duda Software",
+  "controllerAddress": "Kalinowa 6, Chotmów 05-123, Poland",
+  "storageAndRetention": "The integration has not been implemented. It does not currently collect or store access tokens, downloaded Facebook data, publishing content or operational logs. There is therefore no integration data-retention period currently in operation. Before activation, this section will be updated to identify actual storage locations, access controls and retention or deletion criteria for each category.",
+  "serviceProviders": "No hosting, logging, automation or AI provider currently processes Facebook data through this unimplemented integration. This statement is limited to this integration and does not describe other RSD Software services. Any providers used after implementation will be identified in an updated policy before processing begins.",
+  "securityMeasures": "No operational integration safeguards are claimed while the integration is unimplemented. Before activation, access to the integration and its credentials must be restricted to authorized persons. Access tokens must be kept confidential and excluded from public source code, posts and shared diagnostic output. Actual additional safeguards will be described after implementation and verification.",
+  "internationalProcessing": "RSD Software does not currently make international data transfers through this unimplemented integration. Before activation, any transfers involving its actual service providers and applicable safeguards will be assessed and described here. Meta independently processes information under its own privacy policy.",
+  "verificationReference": "Owner supplied Rafal Szymon Duda Software and Kalinowa 6, Chotmów 05-123, Poland on 2026-11-05, confirmed that the separate Pages integration is not implemented, and identified the company Facebook Page as https://www.facebook.com/profile.php?id=61596025359717 . This policy describes the current pre-launch state only. Recheck the publication date on release and verify the complete operational data flow before activating any integration."
+}

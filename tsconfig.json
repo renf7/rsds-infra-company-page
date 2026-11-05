@@ -24,6 +24,7 @@
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "scripts/**/*.tsx",
+    "scripts/**/*.ts",
     "vite.config.ts"
   ]
 }
