@@ -12,6 +12,7 @@ it('keeps initials as the only account control and exposes logout after click', 
   expect(screen.queryByRole('button', { name: 'Log out' })).not.toBeInTheDocument();
   fireEvent.click(avatar);
   expect(avatar).toHaveAttribute('aria-expanded', 'true');
+  expect(screen.getAllByRole('menuitem').map(control => control.textContent)).toEqual(['Settings', 'Log out']);
   const item = screen.getByRole('menuitem', { name: 'Log out' });
   expect(item).toHaveFocus();
   fireEvent.click(item);
@@ -38,8 +39,8 @@ it('supports keyboard context menu and menu navigation without trapping Tab', ()
   expect(settings).toHaveAttribute('href', '/settings/');
   fireEvent.keyDown(item, { key: 'ArrowDown' }); expect(settings).toHaveFocus();
   fireEvent.keyDown(settings, { key: 'ArrowUp' }); expect(item).toHaveFocus();
-  fireEvent.keyDown(item, { key: 'End' }); expect(settings).toHaveFocus();
-  fireEvent.keyDown(settings, { key: 'Home' }); expect(item).toHaveFocus();
+  fireEvent.keyDown(settings, { key: 'End' }); expect(item).toHaveFocus();
+  fireEvent.keyDown(item, { key: 'Home' }); expect(settings).toHaveFocus();
   fireEvent.keyDown(item, { key: 'Tab' });
   expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 });

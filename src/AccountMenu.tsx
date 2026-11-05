@@ -48,10 +48,10 @@ export function AccountMenu({ name, initials, color, language, onLogout }: Props
           items[next]?.focus();
         }
       }}>
+      <a role="menuitem" href={language === 'pl' ? '/pl/settings/' : '/settings/'}>{language === 'pl' ? 'Ustawienia' : 'Settings'}</a>
       <button ref={item} type="button" role="menuitem" onClick={() => { close(); onLogout(); }}>
         {language === 'pl' ? 'Wyloguj' : 'Log out'}
       </button>
-      <a role="menuitem" href={language === 'pl' ? '/pl/settings/' : '/settings/'}>{language === 'pl' ? 'Ustawienia' : 'Settings'}</a>
     </div>}
   </div>;
 }
