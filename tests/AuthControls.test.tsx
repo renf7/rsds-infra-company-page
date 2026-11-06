@@ -28,7 +28,11 @@ it('opens an accessible modal with backend-managed provider links and restores f
   fireEvent.click(button);
   expect(screen.getByRole('dialog')).toHaveAccessibleName('Log in');
   for (const provider of api.providerNames) {
-    expect(await screen.findByRole('link', { name: "Continue with " + api.providerLabels[provider] })).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
+    const link = await screen.findByRole('link', { name: "Continue with " + api.providerLabels[provider] });
+    expect(link).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
+    expect(link.querySelector('img')).toHaveAttribute('src', `/provider-icons/${provider}.svg`);
+    expect(link.querySelector('img')).toHaveAttribute('alt', '');
+    expect(link.firstElementChild).toHaveAttribute('aria-hidden', 'true');
   }
   const first = screen.getByRole('link', { name: 'Continue with Facebook' });
   const close = screen.getByRole('button', { name: 'Close' });

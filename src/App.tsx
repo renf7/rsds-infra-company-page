@@ -14,8 +14,8 @@ export function Header({ page, language, homeNavigation = false, settings = fals
         {page.navigation.map(link => <a key={link.id} className={link.id === 'contact' ? 'nav-cta' : undefined} href={`${homeNavigation || settings ? page.home : ''}#${link.id}`}>{link.label}</a>)}
       </nav>
       <nav className="language-nav" aria-label={page.languageLabel}>
-        <a href="/" lang="en" hrefLang="en" data-language-choice="en" aria-current={language === 'en' ? 'page' : undefined} onClick={() => rememberLanguage('en')}>EN</a>
-        <a href="/pl/" lang="pl" hrefLang="pl" data-language-choice="pl" aria-current={language === 'pl' ? 'page' : undefined} onClick={() => rememberLanguage('pl')}>PL</a>
+        <a href={settings ? '/settings/' : '/'} lang="en" hrefLang="en" data-language-choice="en" aria-current={language === 'en' ? 'page' : undefined} onClick={() => rememberLanguage('en')}>EN</a>
+        <a href={settings ? '/pl/settings/' : '/pl/'} lang="pl" hrefLang="pl" data-language-choice="pl" aria-current={language === 'pl' ? 'page' : undefined} onClick={() => rememberLanguage('pl')}>PL</a>
       </nav>
       {!homeNavigation && <AuthControls language={language} />}
     </div>
