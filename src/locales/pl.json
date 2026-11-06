@@ -1,8 +1,8 @@
 {
   "home": "/pl/",
-  "homeLabel": "Strona główna RSD Software",
+  "homeLabel": "Strona główna RSD Software EU",
   "logo": "../logo-icon.png",
-  "logoAlt": "Logo RSD Software",
+  "logoAlt": "Logo RSD Software EU",
   "navigationLabel": "Nawigacja główna",
   "languageLabel": "Wybór języka",
   "navigation": [
@@ -28,9 +28,9 @@
     }
   ],
   "hero": {
-    "eyebrow": "RSD Software · rsdsoftware.eu",
+    "eyebrow": "RSD Software EU · rsdsoftware.eu",
     "heading": "Profesjonalne tworzenie oprogramowania Java ze wsparciem AI",
-    "description": "RSD Software to firma tworząca oprogramowanie Java. Wykorzystujemy AI, aby przyspieszać proces inżynierski, a odpowiedzialność za architekturę, jakość i rezultat pozostaje po stronie doświadczonych inżynierów.",
+    "description": "RSD Software EU to firma tworząca oprogramowanie Java. Wykorzystujemy AI, aby przyspieszać proces inżynierski, a odpowiedzialność za architekturę, jakość i rezultat pozostaje po stronie doświadczonych inżynierów.",
     "primary": "Rozpocznij projekt",
     "secondary": "Poznaj usługi"
   },

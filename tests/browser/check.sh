@@ -13,6 +13,19 @@ trap cleanup EXIT
 # RSDSINFRA-30 explicitly approves this one brand asset replacement. Keep every
 # other pinned baseline file and the zero-different-pixels comparison unchanged.
 cp public/logo-icon.png .validation/static/public/logo-icon.png
+cp public/logo.png .validation/static/public/logo.png
+# The owner also approved the EU suffix throughout website branding in PR18.
+# Normalize only that exact phrase in the frozen HTML, preserving the rest.
+python3 - <<'PY'
+from pathlib import Path
+import re
+for name in ('index.html', 'pl/index.html'):
+    path = Path('.validation/static/public') / name
+    text = path.read_text(encoding='utf-8')
+    text = re.sub(r'\bRSD Software\b(?!\s+EU\b)', 'RSD Software EU', text, flags=re.IGNORECASE)
+    text = text.replace('content="600"', 'content="256"').replace('"width": 600', '"width": 256').replace('"height": 600', '"height": 256')
+    path.write_text(text, encoding='utf-8')
+PY
 docker build -t "$prefix-baseline" .validation/static
 docker build -t "$prefix-candidate" .
 docker build -t "$prefix-browser" .validation/runner/e2e

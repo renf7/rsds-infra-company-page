@@ -65,7 +65,7 @@ function ContactSection({ page }: { page: PageContent }) {
 
 export function Footer({ page, privacyPolicyAvailable = false }: { page: PageContent; privacyPolicyAvailable?: boolean }) {
   return <footer className="site-footer"><div className="container footer-inner">
-    <p>© <span id="year">2026</span> RSD Software · rsdsoftware.eu</p><p>{page.footer}</p>
+    <p>© <span id="year">2026</span> RSD Software EU · rsdsoftware.eu</p><p>{page.footer}</p>
     {privacyPolicyAvailable && <a data-privacy-policy-link href="/facebook-privacy-policy">Privacy Policy</a>}
   </div></footer>;
 }

@@ -44,7 +44,7 @@ it('publishes a complete English static policy without scripts, tracking or unre
   await prerender(directory);
   await expect(readFile(join(directory, 'privacy-policy.html'))).rejects.toThrow();
   const document = new DOMParser().parseFromString(await readFile(join(directory, 'facebook-privacy-policy.html'), 'utf8'), 'text/html');
-  expect(document.title).toBe('Privacy Policy | RSD Software');
+  expect(document.title).toBe('Privacy Policy | RSD Software EU');
   expect(document.documentElement.lang).toBe('en');
   expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://www.rsdsoftware.eu/facebook-privacy-policy');
   expect(document.querySelectorAll('script, iframe, form')).toHaveLength(0);

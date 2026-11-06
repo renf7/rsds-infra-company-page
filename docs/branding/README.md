@@ -11,6 +11,9 @@ SHA-256: `61f3ae0742b7b902dd7a56dc4426c6f802afea7b2863756aa0372abef5b8e48a`.
 Browser privacy checks verify the served bytes and image dimensions on all three
 routes at mobile and desktop widths. The legacy pixel comparison uses this same
 explicitly approved asset in the otherwise frozen static baseline. No comparison
-threshold is raised and no logo region is hidden. Unrelated social/metadata
-images remain outside this change. Delivery: company-page PR18 alongside the
+threshold is raised and no logo region is hidden. The owner expanded the requirement to all RSD Software EU branding in PR18.
+The same exact PNG now also replaces `public/logo.png` for social/organization
+metadata; declared dimensions are updated to 256 × 256. All visible branding,
+alternative text, titles, descriptions and structured data use RSD Software EU.
+Verified legal controller details and URLs are unchanged. Delivery: company-page PR18 alongside the
 Facebook privacy policy; separate Jira requirement RSDSINFRA-30.

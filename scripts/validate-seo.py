@@ -26,9 +26,9 @@ PAGES = {
     PUBLIC / "index.html": {
         "lang": "en",
         "canonical": f"{BASE_URL}/",
-        "title": "Java Software Development with AI Support | RSD Software",
+        "title": "Java Software Development with AI Support | RSD Software EU",
         "description": (
-            "RSD Software delivers robust Java software with AI-powered support, "
+            "RSD Software EU delivers robust Java software with AI-powered support, "
             "led by experienced software professionals."
         ),
         "h1": "Professional Java Software Development with AI-Powered Support",
@@ -39,9 +39,9 @@ PAGES = {
     PUBLIC / "pl" / "index.html": {
         "lang": "pl",
         "canonical": f"{BASE_URL}/pl/",
-        "title": "Tworzenie oprogramowania Java ze wsparciem AI | RSD Software",
+        "title": "Tworzenie oprogramowania Java ze wsparciem AI | RSD Software EU",
         "description": (
-            "RSD Software tworzy niezawodne oprogramowanie Java ze wsparciem AI, "
+            "RSD Software EU tworzy niezawodne oprogramowanie Java ze wsparciem AI, "
             "dostarczane przez doświadczonych programistów."
         ),
         "h1": "Profesjonalne tworzenie oprogramowania Java ze wsparciem AI",
@@ -197,7 +197,7 @@ def validate_json_ld(parser, expected, label):
         organization = organizations[0]
         check(organization.get("@context") == "https://schema.org", f"{label}: invalid schema context")
         check(organization.get("@id") == ORGANIZATION_ID, f"{label}: inconsistent organization ID")
-        check(organization.get("name") == "RSD Software", f"{label}: inconsistent organization name")
+        check(organization.get("name") == "RSD Software EU", f"{label}: inconsistent organization name")
         check(organization.get("url") == ALTERNATES["en"], f"{label}: inconsistent organization URL")
         check(organization.get("email") == EMAIL, f"{label}: inconsistent organization email")
         check(bool(organization.get("description")), f"{label}: missing organization description")
@@ -207,7 +207,7 @@ def validate_json_ld(parser, expected, label):
         if isinstance(logo, dict):
             check(logo.get("@type") == "ImageObject", f"{label}: organization logo must be an ImageObject")
             check(logo.get("url") == LOGO_URL, f"{label}: inconsistent organization logo URL")
-            check(logo.get("width") == 600 and logo.get("height") == 600, f"{label}: incorrect logo dimensions")
+            check(logo.get("width") == 256 and logo.get("height") == 256, f"{label}: incorrect logo dimensions")
 
     websites = [item for item in structured_data if item.get("@type") == "WebSite"]
     if expected["website_json_ld"]:
@@ -217,7 +217,7 @@ def validate_json_ld(parser, expected, label):
             check(website.get("@context") == "https://schema.org", f"{label}: invalid WebSite schema context")
             check(website.get("@id") == WEBSITE_ID, f"{label}: inconsistent website ID")
             check(website.get("url") == ALTERNATES["en"], f"{label}: inconsistent website URL")
-            check(website.get("name") == "RSD Software", f"{label}: inconsistent website name")
+            check(website.get("name") == "RSD Software EU", f"{label}: inconsistent website name")
             check(website.get("alternateName") == "RSD", f"{label}: missing website alternate name")
             publisher = website.get("publisher", {})
             check(isinstance(publisher, dict), f"{label}: website publisher must reference an entity")
@@ -263,7 +263,7 @@ def validate_page(page_path, expected):
     check(alternates == ALTERNATES, f"{label}: incomplete or inconsistent hreflang links")
 
     check(meta_by_property.get("og:type") == "website", f"{label}: invalid Open Graph type")
-    check(meta_by_property.get("og:site_name") == "RSD Software", f"{label}: invalid Open Graph site name")
+    check(meta_by_property.get("og:site_name") == "RSD Software EU", f"{label}: invalid Open Graph site name")
     check(meta_by_property.get("og:locale") == expected["og_locale"], f"{label}: invalid Open Graph locale")
     check(
         meta_by_property.get("og:locale:alternate") == expected["alternate_locale"],
@@ -276,8 +276,8 @@ def validate_page(page_path, expected):
     )
     check(meta_by_property.get("og:url") == expected["canonical"], f"{label}: Open Graph URL differs from canonical")
     check(meta_by_property.get("og:image") == LOGO_URL, f"{label}: invalid Open Graph image")
-    check(meta_by_property.get("og:image:width") == "600", f"{label}: invalid Open Graph image width")
-    check(meta_by_property.get("og:image:height") == "600", f"{label}: invalid Open Graph image height")
+    check(meta_by_property.get("og:image:width") == "256", f"{label}: invalid Open Graph image width")
+    check(meta_by_property.get("og:image:height") == "256", f"{label}: invalid Open Graph image height")
     check(bool(meta_by_property.get("og:image:alt")), f"{label}: missing Open Graph image alt text")
 
     check(meta_by_name.get("twitter:card") == "summary", f"{label}: invalid Twitter card")
@@ -397,7 +397,7 @@ def main():
 
     logo_path = PUBLIC / "logo.png"
     if logo_path.is_file():
-        check(png_dimensions(logo_path) == (600, 600), "logo.png must be a 600x600 PNG")
+        check(png_dimensions(logo_path) == (256, 256), "logo.png must be a 256x256 PNG")
 
     favicon_path = PUBLIC / "logo-icon.png"
     if favicon_path.is_file():

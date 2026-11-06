@@ -19,7 +19,7 @@ export async function prerender(directory: string, policy: PrivacyPolicy = readP
     await writeFile(path, template.replace(shell, `<div id="root">${renderToString(<App language={language} privacyPolicyAvailable={available} />)}</div>`));
   }
   if (available) {
-    const html = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Privacy Policy | RSD Software</title><meta name="description" content="Privacy information for the RSD Software EU Facebook Pages integration."><meta name="referrer" content="no-referrer"><meta name="robots" content="' + (policy.status === 'approved' ? 'index,follow' : 'noindex,nofollow') + '"><link rel="canonical" href="https://www.rsdsoftware.eu/facebook-privacy-policy"><link rel="stylesheet" href="/styles.css"></head><body>' + renderToString(<PrivacyPolicyPage policy={policy} />) + '</body></html>';
+    const html = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Privacy Policy | RSD Software EU</title><meta name="description" content="Privacy information for the RSD Software EU Facebook Pages integration."><meta name="referrer" content="no-referrer"><meta name="robots" content="' + (policy.status === 'approved' ? 'index,follow' : 'noindex,nofollow') + '"><link rel="canonical" href="https://www.rsdsoftware.eu/facebook-privacy-policy"><link rel="stylesheet" href="/styles.css"></head><body>' + renderToString(<PrivacyPolicyPage policy={policy} />) + '</body></html>';
     await writeFile(join(directory, 'facebook-privacy-policy.html'), html);
   } else {
     await rm(join(directory, 'facebook-privacy-policy.html'), { force: true });
