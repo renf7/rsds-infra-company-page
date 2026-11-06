@@ -31,3 +31,10 @@
 .settings-section h2 { margin-top:0; }
 .settings-section p { color:var(--muted); }
 .settings-section input { max-width:100%; }
+
+.auth-provider-list > .btn { display: flex; align-items: center; justify-content: flex-start; gap: 12px; }
+.provider-badge { display: inline-grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; background: #fff; }
+.provider-badge img { display: block; width: 18px; height: 18px; object-fit: contain; }
+.provider-badge--google img { width: 28px; height: 28px; }
+.provider-badge--facebook { background: #0866ff; }
+.provider-badge--facebook img { filter: brightness(0) invert(1); }

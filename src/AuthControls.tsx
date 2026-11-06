@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { action, providers, providerNames, providerLabels, session, type AvailableProvider, type Session } from './auth-api';
 import { AccountMenu } from './AccountMenu';
+import { ProviderIcon } from './ProviderIcon';
 import type { Language } from './content';
 import { beginNavigation, runAction } from './activity';
 
@@ -63,8 +64,8 @@ export function AuthControls({ language }: { language: Language }) {
         const enabled = available.some(item => item.id === provider && item.enabled);
         const label = providerLabels[provider];
         const text = (polish ? 'Kontynuuj z ' : 'Continue with ') + label;
-        return enabled ? <a className="btn btn-secondary" key={provider} href={'/api/auth/oauth2/authorization/' + provider + (polish ? '?lang=pl' : '')}>{text}</a>
-          : <button className="btn btn-secondary" type="button" key={provider} disabled>{text}</button>;
+        return enabled ? <a className="btn btn-secondary" key={provider} href={'/api/auth/oauth2/authorization/' + provider + (polish ? '?lang=pl' : '')}><ProviderIcon provider={provider} /><span>{text}</span></a>
+          : <button className="btn btn-secondary" type="button" key={provider} disabled><ProviderIcon provider={provider} /><span>{text}</span></button>;
       })}</div>
       {error && <p role="alert">{error}</p>}
       <button type="button" className="auth-button" onClick={close}>{polish ? 'Zamknij' : 'Close'}</button>
