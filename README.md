@@ -1,8 +1,8 @@
 # rsds-infra-company-page
 
-React and TypeScript company website for **RSD Software**, built with Vite and served by nginx. Tracking: [RSDSINFRA-5](https://rsdsoftware.atlassian.net/browse/RSDSINFRA-5).
+React and TypeScript company website for **RSD Software EU**, built with Vite and served by nginx. Tracking: [RSDSINFRA-5](https://rsdsoftware.atlassian.net/browse/RSDSINFRA-5).
 
-RSD Software builds robust Java software with AI-powered support, delivered by experienced
+RSD Software EU builds robust Java software with AI-powered support, delivered by experienced
 software professionals. This repository contains the marketing landing page and the
 Docker packaging used to ship it.
 
@@ -164,3 +164,6 @@ new URLs are already live and should not submit them prematurely.
 The image runs nginx directly as UID/GID 101 on port 8080 and supports a read-only root filesystem with writable /tmp. Alpine security packages are upgraded during build, and Trivy must pass before publishing. Helm's default branch includes PR #4's hardened runtime (service.targetPort=8080); older charts targeting container port 80 are incompatible. Public Service/Ingress ports remain unchanged. CI checks English/Polish pages and CSS under the restricted runtime.
 
 Semgrep exceptions are limited to canonical/hreflang metadata links: these do not load script/style subresources, so SRI does not apply. No executable-resource integrity rule is globally disabled. XML sitemap validation uses defusedxml to reject unsafe XML.
+
+## Facebook Pages privacy policy
+The English public document is served at /facebook-privacy-policy with the title Privacy Policy | RSD Software EU and linked from both home-page footers. It concerns the separate, currently unimplemented RSD Software EU Pages integration, not website SSO. See [policy facts, publication controls and release checks](docs/privacy/README.md). Run npm run privacy:verify before release, confirm the actual publication date and check the public HTTPS URL after deployment; a passing PR or local build does not prove production publication.

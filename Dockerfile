@@ -6,8 +6,10 @@ COPY tsconfig.json vite.config.ts index.html ./
 COPY pl ./pl
 COPY src ./src
 COPY public ./public
-COPY scripts/prerender.tsx ./scripts/prerender.tsx
-RUN npm run build
+COPY scripts ./scripts
+COPY docs/privacy ./docs/privacy
+ARG PRIVACY_POLICY_PREVIEW=false
+RUN PRIVACY_POLICY_PREVIEW=$PRIVACY_POLICY_PREVIEW npm run build
 
 # Preserve the hardened nginx runtime expected by the Helm chart.
 FROM nginx:alpine

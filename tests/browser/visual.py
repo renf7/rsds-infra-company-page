@@ -59,6 +59,11 @@ with sync_playwright() as playwright:
                 context.route('https://api.country.is/**', lambda request: request.fulfill(status=200, content_type='application/json', body='{"country":"US"}'))
                 page = context.new_page()
                 page.goto(url + route, wait_until='networkidle')
+                # RSDSINFRA-29 intentionally adds the footer policy link. Separate
+                # privacy acceptance tests verify it; keep the legacy marketing
+                # pixel comparison scoped to the pre-existing content only.
+                if version == 'candidate':
+                    page.locator('[data-privacy-policy-link]').evaluate_all('elements => elements.forEach(element => element.remove())')
                 page.evaluate('document.fonts.ready')
                 captures[version] = page.screenshot(path=str(OUTPUT / f'{version}-{device}-{language}.png'), full_page=True, animations='disabled')
                 context.close()

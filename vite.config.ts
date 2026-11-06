@@ -1,8 +1,10 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { policyIsAvailable, readPrivacyPolicy } from './scripts/privacy-policy';
 
 export default defineConfig({
+  define: { 'import.meta.env.VITE_PRIVACY_POLICY_AVAILABLE': JSON.stringify(String(policyIsAvailable(readPrivacyPolicy(), process.env.PRIVACY_POLICY_PREVIEW === 'true'))) },
   plugins: [react()],
   build: {
     rolldownOptions: {
@@ -17,7 +19,7 @@ export default defineConfig({
     setupFiles: ['./tests/setup.ts'],
     coverage: {
       provider: 'v8',
-      include: ['src/**/*.{ts,tsx}', 'scripts/prerender.tsx'],
+      include: ['src/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}'],
       reporter: ['text', 'lcov'],
       thresholds: { lines: 80, statements: 80, branches: 80, functions: 80 },
     },

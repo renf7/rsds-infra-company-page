@@ -1,8 +1,8 @@
 {
   "home": "/",
-  "homeLabel": "RSD Software home",
+  "homeLabel": "RSD Software EU home",
   "logo": "logo-icon.png",
-  "logoAlt": "RSD Software logo",
+  "logoAlt": "RSD Software EU logo",
   "navigationLabel": "Primary",
   "languageLabel": "Language selection",
   "navigation": [
@@ -28,9 +28,9 @@
     }
   ],
   "hero": {
-    "eyebrow": "RSD Software · rsdsoftware.eu",
+    "eyebrow": "RSD Software EU · rsdsoftware.eu",
     "heading": "Professional Java Software Development with AI-Powered Support",
-    "description": "RSD Software is a Java software development company. We use AI to accelerate the engineering process, while delivery stays led by senior engineers who own architecture, quality, and outcomes.",
+    "description": "RSD Software EU is a Java software development company. We use AI to accelerate the engineering process, while delivery stays led by senior engineers who own architecture, quality, and outcomes.",
     "primary": "Start a project",
     "secondary": "Explore services"
   },

@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "privacy:verify": "tsx scripts/check-privacy-policy.ts"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",

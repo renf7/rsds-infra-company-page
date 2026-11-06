@@ -1,14 +1,14 @@
 import { content, type Feature, type Language, type PageContent, type SectionContent } from './content';
 import { rememberLanguage, useLanguageRedirect } from './language';
 
-function Header({ page, language }: { page: PageContent; language: Language }) {
+export function Header({ page, language, homeNavigation = false }: { page: PageContent; language: Language; homeNavigation?: boolean }) {
   return <header className="site-header">
     <div className="container header-inner">
       <a className="brand" href={page.home} aria-label={page.homeLabel}>
         <img className="brand-logo" src={page.logo} alt={page.logoAlt} width="56" height="56" />
       </a>
       <nav className="site-nav" aria-label={page.navigationLabel}>
-        {page.navigation.map(link => <a key={link.id} className={link.id === 'contact' ? 'nav-cta' : undefined} href={`#${link.id}`}>{link.label}</a>)}
+        {page.navigation.map(link => <a key={link.id} className={link.id === 'contact' ? 'nav-cta' : undefined} href={`${homeNavigation ? page.home : ''}#${link.id}`}>{link.label}</a>)}
       </nav>
       <nav className="language-nav" aria-label={page.languageLabel}>
         <a href="/" lang="en" hrefLang="en" data-language-choice="en" aria-current={language === 'en' ? 'page' : undefined} onClick={() => rememberLanguage('en')}>EN</a>
@@ -63,18 +63,19 @@ function ContactSection({ page }: { page: PageContent }) {
   </div></section>;
 }
 
-function Footer({ page }: { page: PageContent }) {
+export function Footer({ page, privacyPolicyAvailable = false }: { page: PageContent; privacyPolicyAvailable?: boolean }) {
   return <footer className="site-footer"><div className="container footer-inner">
-    <p>© <span id="year">2026</span> RSD Software · rsdsoftware.eu</p><p>{page.footer}</p>
+    <p>© <span id="year">2026</span> RSD Software EU · rsdsoftware.eu</p><p>{page.footer}</p>
+    {privacyPolicyAvailable && <a data-privacy-policy-link href="/facebook-privacy-policy">Privacy Policy</a>}
   </div></footer>;
 }
 
-export function App({ language }: { language: Language }) {
+export function App({ language, privacyPolicyAvailable = false }: { language: Language; privacyPolicyAvailable?: boolean }) {
   useLanguageRedirect(language);
   const page = content[language];
   return <>
     <Header page={page} language={language} />
     <main><Hero page={page} />{page.sections.map(section => <ContentSection key={section.id} section={section} page={page} />)}<ContactSection page={page} /></main>
-    <Footer page={page} />
+    <Footer page={page} privacyPolicyAvailable={privacyPolicyAvailable} />
   </>;
 }
