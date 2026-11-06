@@ -306,7 +306,8 @@ def validate_page(page_path, expected):
         check(source_scripts[0].get("type") == "module", f"{label}: client entry must be a deferred ES module")
 
     for image in parser.images:
-        check(bool(image.get("alt")), f"{label}: image is missing descriptive alt text")
+        decorative = image.get("alt") == "" and image.get("aria-hidden") == "true"
+        check(bool(image.get("alt", "").strip()) or decorative, f"{label}: image is missing descriptive alt text")
         check(bool(image.get("width")) and bool(image.get("height")), f"{label}: image is missing dimensions")
         image_path = local_path_for_reference(page_path, image.get("src"))
         check(bool(image_path and image_path.is_file()), f"{label}: image source does not exist")
