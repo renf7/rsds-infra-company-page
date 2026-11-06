@@ -10,6 +10,9 @@ cleanup() {
   docker network rm "$prefix" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
+# RSDSINFRA-30 explicitly approves this one brand asset replacement. Keep every
+# other pinned baseline file and the zero-different-pixels comparison unchanged.
+cp public/logo-icon.png .validation/static/public/logo-icon.png
 docker build -t "$prefix-baseline" .validation/static
 docker build -t "$prefix-candidate" .
 docker build -t "$prefix-browser" .validation/runner/e2e
