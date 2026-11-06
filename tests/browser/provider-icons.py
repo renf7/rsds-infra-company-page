@@ -19,6 +19,7 @@ with sync_playwright() as playwright:
             page.get_by_role('button', name='Log in' if language == 'en' else 'Zaloguj się', exact=True).click()
             dialog = page.get_by_role('dialog')
             expect(dialog).to_be_visible()
+            rows = []
             for provider, label in [('facebook', 'Facebook'), ('microsoft', 'Microsoft'), ('google', 'Google'), ('apple', 'Apple'), ('github', 'GitHub')]:
                 option = dialog.get_by_text(('Continue with ' if language == 'en' else 'Kontynuuj z ') + label, exact=True).locator('..')
                 image = option.locator('img')
@@ -28,6 +29,9 @@ with sync_playwright() as playwright:
                 badge = option.locator('.provider-badge')
                 assert badge.evaluate('element => getComputedStyle(element).borderRadius') == '50%'
                 assert image.bounding_box()['x'] < option.locator('span').last.bounding_box()['x'], 'Icon must precede label'
+                rows.append(option.bounding_box())
+            assert max(row['width'] for row in rows) - min(row['width'] for row in rows) <= 1, 'Enabled and disabled provider rows must have equal width'
+            assert all(rows[index + 1]['y'] - (rows[index]['y'] + rows[index]['height']) >= 8 for index in range(4)), 'Provider rows must retain clear vertical spacing'
             assert page.evaluate('document.documentElement.scrollWidth') <= width
             page.screenshot(path=str(output / f'provider-icons-{language}-{width}.png'))
             results.append({'language': language, 'width': width, 'fiveLocalIconsLoaded': True, 'circular': True, 'beforeLabels': True})
