@@ -42,7 +42,10 @@ export function AuthControls({ language }: { language: Language }) {
   };
   const close = () => { dialog.current?.close(); button.current?.focus(); };
   const logout = () => {
-    void action('logout').then(() => { setIdentity({ authenticated: false }); setError(''); })
+    void action('logout').then(() => {
+      setIdentity({ authenticated: false }); setError('');
+      window.location.replace(polish ? '/pl/' : '/');
+    })
       .catch(() => { setError(polish ? 'Wylogowanie nie powiodło się.' : 'Logout failed. Please try again.'); });
   };
   return <div className="auth-controls" data-auth-ui="true">

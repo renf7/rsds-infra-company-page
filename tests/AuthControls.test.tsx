@@ -43,13 +43,27 @@ it('opens an accessible modal with backend-managed provider links and restores f
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(button).toHaveFocus();
 });
-it('renders the authenticated session and logs out through the CSRF-aware API', async () => {
+it.each([['en', '/'], ['pl', '/pl/']] as const)('logs out from settings and replaces the page with the %s home', async (language, home) => {
+  history.replaceState(null, '', language === 'pl' ? '/pl/settings/' : '/settings/');
+  const replace = vi.fn();
+  vi.stubGlobal('location', { ...window.location, replace });
   vi.mocked(api.session).mockResolvedValue({ authenticated: true, name: 'Alice', roles: [] });
+  render(<AuthControls language={language} />);
+  fireEvent.click(await screen.findByTestId('account-avatar'));
+  fireEvent.click(screen.getByRole('menuitem', { name: language === 'pl' ? 'Wyloguj' : 'Log out' }));
+  await waitFor(() => { expect(api.action).toHaveBeenCalledWith('logout'); });
+  await waitFor(() => { expect(replace).toHaveBeenCalledWith(home); });
+});
+it('does not navigate away when logout fails', async () => {
+  const replace = vi.fn();
+  vi.stubGlobal('location', { ...window.location, replace });
+  vi.mocked(api.action).mockRejectedValueOnce(new Error('offline'));
+  vi.mocked(api.session).mockResolvedValue({ authenticated: true, name: 'Alice' });
   render(<AuthControls language="en" />);
   fireEvent.click(await screen.findByTestId('account-avatar'));
   fireEvent.click(screen.getByRole('menuitem', { name: 'Log out' }));
-  await waitFor(() => { expect(api.action).toHaveBeenCalledWith('logout'); });
-  expect(await screen.findByRole('button', { name: 'Log in' })).toBeVisible();
+  expect(await screen.findByText('Logout failed. Please try again.', { selector: '.auth-error' })).toBeVisible();
+  expect(replace).not.toHaveBeenCalled();
 });
 it('provides Polish labels and does not enable unavailable providers', async () => {
   vi.mocked(api.providers).mockResolvedValue([]);
