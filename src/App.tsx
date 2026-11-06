@@ -1,6 +1,8 @@
 import { content, type Feature, type Language, type PageContent, type SectionContent } from './content';
 import { rememberLanguage, useLanguageRedirect } from './language';
 import { AuthControls } from './AuthControls';
+import { SettingsPage } from './SettingsPage';
+import { ActivityIndicator } from './ActivityIndicator';
 
 export function Header({ page, language, homeNavigation = false, settings = false }: { page: PageContent; language: Language; homeNavigation?: boolean; settings?: boolean }) {
   return <header className="site-header">
@@ -76,6 +78,7 @@ export function App({ language, privacyPolicyAvailable = false, settings = false
   useLanguageRedirect(language);
   const page = content[language];
   return <>
+    <ActivityIndicator language={language} />
     <Header page={page} language={language} settings={settings} />
     {settings ? <SettingsPage language={language} /> : <main><Hero page={page} />{page.sections.map(section => <ContentSection key={section.id} section={section} page={page} />)}<ContactSection page={page} /></main>}
     <Footer page={page} privacyPolicyAvailable={privacyPolicyAvailable} />

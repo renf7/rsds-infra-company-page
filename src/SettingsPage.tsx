@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { accountSettings, saveContactEmail, session } from './auth-api';
 import type { Language } from './content';
+import { runAction } from './activity';
 
 export function SettingsPage({ language }: { language: Language }) {
   const pl = language === 'pl';
@@ -20,7 +21,7 @@ export function SettingsPage({ language }: { language: Language }) {
   }, []);
   const save = () => {
     setSaving(true); setMessage(''); setError('');
-    void saveContactEmail(email).then(() => { setMessage(pl ? 'Zapisano zmiany.' : 'Saved changes.'); })
+    void runAction(() => saveContactEmail(email)).then(() => { setMessage(pl ? 'Zapisano zmiany.' : 'Saved changes.'); })
       .catch(() => { setError(pl ? 'Nie udało się zapisać. Sprawdź adres email lub zaloguj się ponownie.' : 'Could not save. Check the email address or sign in again.'); })
       .finally(() => { setSaving(false); });
   };
