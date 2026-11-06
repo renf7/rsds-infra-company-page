@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { action, providers, providerNames, providerLabels, session, type AvailableProvider, type Session } from './auth-api';
 import { AccountMenu } from './AccountMenu';
 import type { Language } from './content';
+import { beginNavigation, runAction } from './activity';
 
 export function AuthControls({ language }: { language: Language }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -38,13 +39,13 @@ export function AuthControls({ language }: { language: Language }) {
   const open = () => {
     setError('');
     dialog.current?.showModal();
-    void providers().then(setAvailable).catch(() => { setError(polish ? 'Logowanie jest chwilowo niedostępne.' : 'Sign-in is temporarily unavailable.'); });
+    void runAction(providers).then(setAvailable).catch(() => { setError(polish ? 'Logowanie jest chwilowo niedostępne.' : 'Sign-in is temporarily unavailable.'); });
   };
   const close = () => { dialog.current?.close(); button.current?.focus(); };
   const logout = () => {
-    void action('logout').then(() => {
+    void runAction(() => action('logout')).then(() => {
       setIdentity({ authenticated: false }); setError('');
-      window.location.replace(polish ? '/pl/' : '/');
+      beginNavigation(); window.location.replace(polish ? '/pl/' : '/');
     })
       .catch(() => { setError(polish ? 'Wylogowanie nie powiodło się.' : 'Logout failed. Please try again.'); });
   };
