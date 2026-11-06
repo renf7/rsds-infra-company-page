@@ -40,11 +40,13 @@ it('fails rather than publishing an empty or unexpected prerender shell', async 
 it('publishes a complete English static policy without scripts, tracking or unresolved fields', async () => {
   const directory = await outputDirectory();
   for (const page of ['index.html', 'pl/index.html']) await writeFile(join(directory, page), await readFile(resolve(page)));
+  await writeFile(join(directory, 'privacy-policy.html'), 'retired policy artifact');
   await prerender(directory);
-  const document = new DOMParser().parseFromString(await readFile(join(directory, 'privacy-policy.html'), 'utf8'), 'text/html');
+  await expect(readFile(join(directory, 'privacy-policy.html'))).rejects.toThrow();
+  const document = new DOMParser().parseFromString(await readFile(join(directory, 'facebook-privacy-policy.html'), 'utf8'), 'text/html');
   expect(document.title).toBe('Privacy Policy | RSD Software');
   expect(document.documentElement.lang).toBe('en');
-  expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://www.rsdsoftware.eu/privacy-policy');
+  expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://www.rsdsoftware.eu/facebook-privacy-policy');
   expect(document.querySelectorAll('script, iframe, form')).toHaveLength(0);
   expect(document.querySelectorAll('section')).toHaveLength(10);
   expect(document.body.textContent).not.toMatch(/Awaiting owner verification|Local review draft|\[insert/i);
@@ -52,8 +54,8 @@ it('publishes a complete English static policy without scripts, tracking or unre
 it('does not expose a policy or footer link when verification is incomplete', async () => {
   const directory = await outputDirectory();
   for (const page of ['index.html', 'pl/index.html']) await writeFile(join(directory, page), await readFile(resolve(page)));
-  await writeFile(join(directory, 'privacy-policy.html'), 'stale previously approved document');
+  await writeFile(join(directory, 'facebook-privacy-policy.html'), 'stale previously approved document');
   await prerender(directory, { ...readPrivacyPolicy(), status: 'draft', controllerAddress: '', publicationDate: '' }, false);
-  await expect(readFile(join(directory, 'privacy-policy.html'))).rejects.toThrow();
+  await expect(readFile(join(directory, 'facebook-privacy-policy.html'))).rejects.toThrow();
   expect(await readFile(join(directory, 'index.html'), 'utf8')).not.toContain('data-privacy-policy-link');
 });

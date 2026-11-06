@@ -1,6 +1,6 @@
 # Meta Pages privacy policy — RSDSINFRA-29
 
-Public route: https://www.rsdsoftware.eu/privacy-policy . This is the English policy for **RSD Software EU (API access)** and its own RSD Software EU Facebook Page. It does not cover website SSO or other products. No Pages API client/backend is implemented by this change.
+Public route: https://www.rsdsoftware.eu/facebook-privacy-policy . This is the English policy for **RSD Software EU** and its own RSD Software EU Facebook Page. It does not cover website SSO or other products. No Pages API client/backend is implemented by this change.
 
 ## Verified scope and factual source
 
@@ -18,8 +18,13 @@ Before activating any actual Pages integration, replace the pre-launch statement
 
 ## Serving and tests
 
-The English document is pre-rendered as static HTML and served by nginx at the exact extensionless `/privacy-policy` route with HTTP200. It works without JavaScript/login and adds no scripts, forms, cookies or page-specific analytics. Existing responsive branding/CSS are reused and the footer link appears on English and Polish homepages. The page's canonical URL and title are explicit. Production HTTPS is supplied by the existing website ingress; local HTTPS may terminate in a separate preview container.
+The English document is pre-rendered as static HTML and served by nginx at the exact extensionless `/facebook-privacy-policy` route with HTTP200. It works without JavaScript/login and adds no scripts, forms, cookies or page-specific analytics. Existing responsive branding/CSS are reused and the footer link appears on English and Polish homepages. The page's canonical URL and title are explicit. Production HTTPS is supplied by the existing website ingress; local HTTPS may terminate in a separate preview container.
 
 Unit/build tests check the content scope, release gate, metadata and draft exclusion. `tests/browser/privacy.py` checks real nginx at 320/390/1440px with JavaScript disabled, exact URL/status, anonymous access, footer links, branding, overflow and no external tracking requests. The pre-migration pixel comparison removes only the newly approved footer link, which the separate privacy assertions cover; all pre-existing marketing content remains pixel-compared. Existing security checks and thresholds remain unchanged.
 
 Production publication is a separate deployment step: after review/merge/release, verify the actual public HTTPS URL returns200 without redirection or login. A working local preview or passing PR does not establish public deployment or guarantee Meta approval. The email deletion-request section is not a machine-readable Meta data-deletion callback endpoint.
+
+
+## Owner review update — 6 November 2026
+
+The public app name is **RSD Software EU**, without the former API-access suffix. The exact target is `/facebook-privacy-policy`; the retired `/privacy-policy` route and stale HTML artifact must not serve a second copy. This policy still concerns the separate own-Page integration, not website SSO. Posts will be written manually with AI enhancement; the token is planned to remain in local credential storage and be used by the agent for authorized operations. Agent conversation history may serve as the operational record, without a separate log service. This does not establish local-only AI processing: the actual service, data access, conversation retention and transfer arrangements must be verified before activating the workflow. Never put real credentials in this repository or review comments. The last-updated date is 2026-11-06; reconfirm on release if publication occurs later.

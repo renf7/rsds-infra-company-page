@@ -20,11 +20,11 @@ export function PrivacyPolicyPage({ policy }: { policy: PrivacyPolicy }) {
   return <><Header page={content.en} language="en" homeNavigation />
     <main className="container privacy-policy"><article aria-labelledby="policy-heading">
       {draft && <aside className="privacy-draft" role="note"><strong>Local review draft — not published.</strong> Required publication details remain unresolved. This draft must not be submitted to Meta or published as a final policy.</aside>}
-      <h1 id="policy-heading">Privacy Policy</h1><p className="privacy-subtitle">RSD Software EU (API access)</p>
+      <h1 id="policy-heading">Privacy Policy</h1><p className="privacy-subtitle">RSD Software EU</p>
       <p>Last updated: {policy.publicationDate || 'Not published'}</p>
       <section aria-labelledby="policy-about"><h2 id="policy-about">1. About this policy</h2>
-        <p>This Privacy Policy concerns “RSD Software EU (API access)”, a planned integration with Meta’s Facebook Pages API. The integration has not been implemented or activated.</p>
-        <p>Its intended purpose is to let authorized administrators manage and publish content on our own Facebook Page, <a href="https://www.facebook.com/profile.php?id=61596025359717" rel="noreferrer">RSD Software EU</a>. It is not offered as a service for managing other businesses’ Facebook Pages. This policy does not cover website SSO login providers or other RSD Software services.</p>
+        <p>This Privacy Policy concerns “RSD Software EU”, a planned integration with Meta’s Facebook Pages API. The integration has not been implemented or activated.</p>
+        <p>Its intended purpose is one owner-operated workflow for authorized administrators to manage and publish content on our own Facebook Page, <a href="https://www.facebook.com/profile.php?id=61596025359717" rel="noreferrer">RSD Software EU</a>. It is not offered as a service for managing other businesses’ Facebook Pages. This policy does not cover website SSO login providers or other RSD Software services.</p>
         <p>The organization responsible for this processing is:</p>
         <address>{fact(policy.controllerName, 'legal business name')}<br />{fact(policy.controllerAddress, 'business contact address')}<br />Contact: {contact}</address>
       </section>
@@ -35,6 +35,7 @@ export function PrivacyPolicyPage({ policy }: { policy: PrivacyPolicy }) {
       </section>
       <section aria-labelledby="policy-use"><h2 id="policy-use">3. How information is used</h2>
         <p>No information is currently processed through the integration. Its planned purposes are:</p><ul><li>Authenticate authorized administrators and identify the authorized Page.</li><li>Create, read, edit, and delete Page content when instructed by an authorized administrator.</li><li>Confirm the status of publishing operations.</li><li>Diagnose errors and maintain the integration’s security and operation.</li></ul>
+        <p>Posts will be written manually by the owner and may be enhanced by an AI agent before publication. The agent may use the integration’s access token through the owner’s authorized workflow to carry out instructed Page operations. AI assistance does not make this a service for managing other businesses’ Pages.</p>
         <p>Before activating these operations, RSD Software will identify the applicable legal basis for each purpose and update this policy. No consent or other legal basis for future processing is assumed by this pre-launch policy.</p>
       </section>
       <section aria-labelledby="policy-storage"><h2 id="policy-storage">4. Storage and retention</h2>

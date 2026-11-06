@@ -15,9 +15,10 @@ with sync_playwright() as playwright:
         page = context.new_page()
         requests = []
         page.on('request', lambda request: requests.append(request.url))
-        response = page.goto(base + '/privacy-policy', wait_until='networkidle')
+        response = page.goto(base + '/facebook-privacy-policy', wait_until='networkidle')
         assert response.status == 200
-        assert page.url == base + '/privacy-policy', 'Exact route must not redirect'
+        assert page.request.get(base + '/privacy-policy').status == 404, 'Retired route must not serve a stale policy'
+        assert page.url == base + '/facebook-privacy-policy', 'Exact route must not redirect'
         assert page.title() == 'Privacy Policy | RSD Software'
         assert page.locator('html').get_attribute('lang') == 'en'
         expect(page.get_by_role('heading', level=1, name='Privacy Policy', exact=True)).to_be_visible()
@@ -32,7 +33,7 @@ with sync_playwright() as playwright:
         page.screenshot(path=str(output / f'privacy-{width}.png'), full_page=True)
         for route in ['/', '/pl/']:
             page.goto(base + route, wait_until='networkidle')
-            expect(page.get_by_role('link', name='Privacy Policy', exact=True)).to_have_attribute('href', '/privacy-policy')
+            expect(page.get_by_role('link', name='Privacy Policy', exact=True)).to_have_attribute('href', '/facebook-privacy-policy')
         results.append({'width': width, 'exactRoute200': True, 'loggedOut': True, 'noJavascript': True, 'noTrackingRequests': True, 'footerLinks': True})
         context.close()
     browser.close()

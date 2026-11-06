@@ -15,16 +15,16 @@ it('keeps the incomplete owner-reviewed policy out of normal publication', () =>
   expect(() => requireApprovedPolicy(draft)).toThrow('owner verification');
   expect(renderToString(<App language="en" />)).not.toContain('data-privacy-policy-link');
   render(<App language="en" privacyPolicyAvailable />);
-  expect(screen.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy-policy');
+  expect(screen.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/facebook-privacy-policy');
 });
 it('makes the draft scope and missing facts explicit without login', () => {
   render(<PrivacyPolicyPage policy={draftPolicy()} />);
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Privacy Policy');
   expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(10);
   expect(screen.getByRole('note')).toHaveTextContent('Local review draft');
-  expect(screen.getByText(/integration has not been implemented or activated/)).toBeVisible();
+  expect(screen.getByText(/^This Privacy Policy concerns/)).toHaveTextContent('integration has not been implemented or activated');
   expect(screen.getByText(/Awaiting owner verification: business contact address/)).toBeVisible();
-  expect(screen.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy-policy');
+  expect(screen.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/facebook-privacy-policy');
   expect(screen.getByRole('link', { name: 'RSD Software EU' })).toHaveAttribute('href', 'https://www.facebook.com/profile.php?id=61596025359717');
   expect(screen.getAllByRole('link', { name: 'contact@rsdsoftware.eu' }).length).toBeGreaterThan(0);
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -41,4 +41,15 @@ it('requires complete verified facts and a valid publication date before release
   expect(() => parsePrivacyPolicy(null)).toThrow('Invalid privacy-policy');
   expect(() => parsePrivacyPolicy({ status: 'draft' })).toThrow('Invalid privacy-policy field');
   expect(() => parsePrivacyPolicy({ ...complete, status: 'other' })).toThrow('Unknown');
+});
+
+it('describes the owner-operated AI workflow without claiming local-only processing', () => {
+  const html = renderToString(<PrivacyPolicyPage policy={readPrivacyPolicy()} />);
+  expect(html).toContain('RSD Software EU');
+  expect(html).not.toContain('(API access)');
+  expect(html).toContain('Posts will be written manually');
+  expect(html).toContain('stored locally');
+  expect(html).toContain('Conversation history');
+  expect(html).toContain('does not by itself mean');
+  expect(html).toContain('not active yet');
 });
