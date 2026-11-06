@@ -3,6 +3,6 @@ import { App } from './App';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Missing React root');
-const app = <App language={document.documentElement.lang === 'pl' ? 'pl' : 'en'} privacyPolicyAvailable={import.meta.env.VITE_PRIVACY_POLICY_AVAILABLE === 'true'} />;
+const app = <App language={document.documentElement.lang === 'pl' ? 'pl' : 'en'} privacyPolicyAvailable={import.meta.env.VITE_PRIVACY_POLICY_AVAILABLE === 'true'} settings={/^\/(pl\/)?settings\/(index\.html)?$/.test(window.location.pathname)} />;
 if (root.hasChildNodes()) hydrateRoot(root, app);
 else createRoot(root).render(app);

@@ -1,4 +1,4 @@
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { renderToString } from 'react-dom/server';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -17,6 +17,11 @@ export async function prerender(directory: string, policy: PrivacyPolicy = readP
     const shell = '<div id="root"></div>';
     if (!template.includes(shell)) throw new Error(`Missing prerender shell in ${path}`);
     await writeFile(path, template.replace(shell, `<div id="root">${renderToString(<App language={language} privacyPolicyAvailable={available} />)}</div>`));
+    const settings = join(directory, language === 'en' ? 'settings' : 'pl/settings');
+    await mkdir(settings, { recursive: true });
+    const settingsTemplate = template.replace(/<title>[^<]*<\/title>/, `<title>${language === 'pl' ? 'Ustawienia' : 'Settings'} | RSD Software EU</title>`)
+      .replace('</head>', '<meta name="robots" content="noindex, nofollow"></head>');
+    await writeFile(join(settings, 'index.html'), settingsTemplate.replace(shell, `<div id="root">${renderToString(<App language={language} settings privacyPolicyAvailable={available} />)}</div>`));
   }
   if (available) {
     const html = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Privacy Policy | RSD Software EU</title><meta name="description" content="Privacy information for the RSD Software EU Facebook Pages integration."><meta name="referrer" content="no-referrer"><meta name="robots" content="' + (policy.status === 'approved' ? 'index,follow' : 'noindex,nofollow') + '"><link rel="canonical" href="https://www.rsdsoftware.eu/facebook-privacy-policy"><link rel="stylesheet" href="/styles.css"></head><body>' + renderToString(<PrivacyPolicyPage policy={policy} />) + '</body></html>';
