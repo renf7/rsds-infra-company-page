@@ -32,6 +32,7 @@ it('opens an accessible modal with backend-managed provider links and restores f
     expect(link).toHaveAttribute('href', '/api/auth/oauth2/authorization/' + provider);
     expect(link.querySelector('img')).toHaveAttribute('src', `/provider-icons/${provider}.svg`);
     expect(link.querySelector('img')).toHaveAttribute('alt', '');
+    expect(link.querySelector('img')).toHaveAttribute('aria-hidden', 'true');
     expect(link.firstElementChild).toHaveAttribute('aria-hidden', 'true');
   }
   const first = screen.getByRole('link', { name: 'Continue with Facebook' });
