@@ -57,9 +57,9 @@ export function AuthControls({ language }: { language: Language }) {
         <span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Zaloguj się' : 'Log in'}</span>
       </button>}
     {error && <p className="auth-error" role="alert">{error}</p>}
-    <dialog ref={dialog} className="auth-dialog" aria-labelledby="auth-heading">
+    <dialog ref={dialog} className="auth-dialog" aria-labelledby="auth-heading" aria-describedby="auth-description">
       <h2 id="auth-heading">{polish ? 'Zaloguj się' : 'Log in'}</h2>
-      <p>{polish ? 'Kontynuuj z wybranym dostawcą. Zalogujemy Cię lub automatycznie utworzymy konto.' : 'Continue with your provider. We will sign you in or create your account automatically.'}</p>
+      <p id="auth-description" className="auth-description">{polish ? 'Wybierz dostawcę, aby kontynuować.' : 'Choose a provider to continue.'}</p>
       <div className="auth-provider-list">{providerNames.map(provider => {
         const enabled = available.some(item => item.id === provider && item.enabled);
         const label = providerLabels[provider];
@@ -68,7 +68,8 @@ export function AuthControls({ language }: { language: Language }) {
           : <button className="btn btn-secondary" type="button" key={provider} disabled><ProviderIcon provider={provider} /><span>{text}</span></button>;
       })}</div>
       {error && <p role="alert">{error}</p>}
-      <button type="button" className="auth-button" onClick={close}>{polish ? 'Zamknij' : 'Close'}</button>
+      <p className="auth-footnote">{polish ? 'Przy pierwszym logowaniu utworzymy Twoje konto.' : 'We’ll create your account on your first sign-in.'}</p>
+      <button type="button" className="auth-dialog-close" aria-label={polish ? 'Zamknij' : 'Close'} onClick={close}><span aria-hidden="true">×</span></button>
     </dialog>
   </div>;
 }
