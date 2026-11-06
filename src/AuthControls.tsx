@@ -29,7 +29,7 @@ export function AuthControls({ language }: { language: Language }) {
   }, []);
   useEffect(() => {
     let active = true;
-    void session().then(value => {
+    void runAction(session).then(value => {
       if (!active) return;
       setIdentity(value);
       if (new URLSearchParams(window.location.search).get('login') === 'failed') setError(polish ? 'Logowanie nie powiodło się. Spróbuj ponownie.' : 'Sign-in failed. Please try again.');

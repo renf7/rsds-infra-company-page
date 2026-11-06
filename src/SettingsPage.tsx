@@ -12,7 +12,8 @@ export function SettingsPage({ language }: { language: Language }) {
   const [error, setError] = useState('');
   useEffect(() => {
     let active = true;
-    void session().then(async identity => {
+    void runAction(async () => {
+      const identity = await session();
       if (!identity.authenticated) { if (active) setState('anonymous'); return; }
       const value = await accountSettings();
       if (active) { setEmail(value.email); setState('ready'); }
