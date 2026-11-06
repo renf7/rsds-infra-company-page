@@ -71,20 +71,12 @@ it('keeps the page usable when session lookup or provider availability fails', a
   fireEvent.click(screen.getByRole('button', { name: 'Log in' }));
   expect(await screen.findByText('Sign-in is temporarily unavailable.', { selector: '.auth-error' })).toBeInTheDocument();
 });
-it('opens email verification after the provider callback and resolves the internal account', async () => {
+it('never opens an internal email challenge, including a stale verification URL', async () => {
   history.replaceState(null, '', '/?login=verify');
-  vi.mocked(api.emailChallenge).mockResolvedValue({ needsEmail: false, maskedEmail: 'a***@example.test' });
-  vi.mocked(api.emailAction).mockResolvedValue();
-  vi.mocked(api.session).mockResolvedValueOnce({ authenticated: false }).mockResolvedValue({ authenticated: true, name: 'Alice', email: 'alice@example.test' });
+  vi.mocked(api.session).mockResolvedValue({ authenticated: true, name: 'Alice', initials: 'AL' });
   render(<AuthControls language="en" />);
-  fireEvent.change(await screen.findByLabelText('Verification code'), { target: { value: '123456' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Verify and continue' }));
   expect(await screen.findByTestId('account-avatar')).toBeVisible();
-  expect(window.location.search).toBe('');
-});
-it('shows a safe error if a pending email challenge expired', async () => {
-  history.replaceState(null, '', '/?login=verify');
-  vi.mocked(api.emailChallenge).mockRejectedValue(new Error('expired'));
-  render(<AuthControls language="pl" />);
-  expect(await screen.findByRole('alert')).toHaveTextContent('Rozpocznij logowanie');
+  expect(screen.queryByLabelText('Verification code')).not.toBeInTheDocument();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(api.emailChallenge).not.toHaveBeenCalled();
 });
