@@ -19,7 +19,7 @@ export default defineConfig({
     setupFiles: ['./tests/setup.ts'],
     coverage: {
       provider: 'v8',
-      include: ['src/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}'],
+      include: ['src/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx,mjs}'],
       reporter: ['text', 'lcov'],
       thresholds: { lines: 80, statements: 80, branches: 80, functions: 80 },
     },

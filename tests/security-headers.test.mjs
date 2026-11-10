@@ -1,0 +1,45 @@
+import { afterEach, expect, it } from 'vitest';
+import { createHash } from 'node:crypto';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { generateHeaders } from '../scripts/security-headers.mjs';
+const temporary = [];
+afterEach(() => { for (const path of temporary.splice(0)) rmSync(path, { recursive: true, force: true }); });
+it('hashes the exact generated JSON-LD across nested pages and excludes executable inline scripts', () => {
+  const root = mkdtempSync(join(tmpdir(), 'rsds-csp-')); temporary.push(root);
+  mkdirSync(join(root, 'pl'));
+  const structured = '\n{"name":"RSD Software EU"}\n';
+  writeFileSync(join(root, 'index.html'), `<script type="application/ld+json">${structured}</script><script>alert(1)</script>`);
+  writeFileSync(join(root, 'pl', 'index.html'), `<script type="application/ld+json">${structured}</script>`);
+  writeFileSync(join(root, 'styles.css'), 'body {}');
+  const output = join(root, 'headers.conf');
+  generateHeaders(root, output);
+  const headers = readFileSync(output, 'utf8');
+  const digest = createHash('sha256').update(structured).digest('base64');
+  expect(headers).toContain(`'sha256-${digest}'`);
+  expect(headers.split(digest)).toHaveLength(2);
+  expect(headers).not.toContain(createHash('sha256').update('alert(1)').digest('base64'));
+  expect(headers).not.toMatch(/unsafe-inline|unsafe-eval/);
+  expect(headers).toContain('X-Frame-Options "DENY"');
+  expect(headers).toContain('X-Content-Type-Options "nosniff"');
+  expect(headers).toContain("connect-src 'self' https://api.country.is");
+  expect(headers).toContain("frame-ancestors 'none'");
+});
+it('sorts distinct hashes deterministically and supports pages without structured data', () => {
+  const root = mkdtempSync(join(tmpdir(), 'rsds-csp-')); temporary.push(root);
+  const output = join(root, 'headers.conf');
+  writeFileSync(join(root, 'empty.html'), '<p>Empty</p>');
+  generateHeaders(root, output);
+  expect(readFileSync(output, 'utf8')).not.toContain('sha256-');
+  writeFileSync(join(root, 'two.html'), '<script type="application/ld+json">one</script><script type="application/ld+json">two</script>');
+  generateHeaders(root, output);
+  const first = readFileSync(output, 'utf8');
+  generateHeaders(root, output);
+  expect(readFileSync(output, 'utf8')).toBe(first);
+  expect(first.match(/sha256-/g)).toHaveLength(2);
+});
+it('fails rather than emitting a permissive policy if the build directory is missing', () => {
+  const root = mkdtempSync(join(tmpdir(), 'rsds-csp-')); temporary.push(root);
+  expect(() => generateHeaders(join(root, 'missing'), join(root, 'headers.conf'))).toThrow();
+});
