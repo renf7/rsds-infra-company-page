@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { AuthControls } from '../src/AuthControls';
 import * as api from '../src/auth-api';
@@ -86,7 +86,8 @@ it('provides Polish labels and does not enable unavailable providers', async () 
   render(<AuthControls language="pl" />);
   fireEvent.click(screen.getByRole('button', { name: 'Zaloguj się' }));
   await waitFor(() => { expect(api.providers).toHaveBeenCalledOnce(); });
-  expect(screen.getByRole('button', { name: 'Kontynuuj z Google' })).toBeDisabled();
+  expect(screen.queryByText('Kontynuuj z Google')).not.toBeInTheDocument();
+  expect(await screen.findByRole('status')).toHaveTextContent('Brak dostępnych');
   expect(screen.getByRole('button', { name: 'Zamknij' })).toBeVisible();
 });
 it('shows a safe actionable provider failure without token details', async () => {
@@ -110,3 +111,16 @@ it('never opens an internal email challenge, including a stale verification URL'
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(api.emailChallenge).not.toHaveBeenCalled();
 });
+it.each(['en', 'pl'] as const)('refreshes visibility while the %s dialog remains open', async language => {
+  render(<AuthControls language={language} />);
+  fireEvent.click(screen.getByRole('button', { name: language === 'pl' ? 'Zaloguj się' : 'Log in' }));
+  await screen.findByRole('link', { name: /GitHub/ });
+  vi.mocked(api.providers).mockResolvedValue(api.providerNames.map(id => ({ id, enabled: true, visible: id === 'google' })));
+  await waitFor(() => { expect(screen.queryByRole('link', { name: /GitHub/ })).not.toBeInTheDocument(); }, { timeout: 6500 });
+  expect(screen.getByRole('link', { name: /Google/ })).toBeVisible();
+  fireEvent.click(screen.getByRole('button', { name: language === 'pl' ? 'Zamknij' : 'Close' }));
+  vi.mocked(api.providers).mockResolvedValue([{ id: 'github', enabled: false, visible: true }]);
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: language === 'pl' ? 'Zaloguj się' : 'Log in' })); });
+  expect(screen.queryByRole('link')).not.toBeInTheDocument();
+  expect(screen.getByRole('status')).toBeVisible();
+}, 10000);
