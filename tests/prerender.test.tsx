@@ -30,6 +30,9 @@ it('pre-renders complete localized pages while preserving their SEO metadata', a
       expect(document.querySelector(selector)?.outerHTML).toBe(expected.querySelector(selector)?.outerHTML);
     }
     expect(document.querySelectorAll('script[type="application/ld+json"]')).toHaveLength(expected.querySelectorAll('script[type="application/ld+json"]').length);
+    const settings = new DOMParser().parseFromString(await readFile(join(directory, language === 'en' ? 'settings/index.html' : 'pl/settings/index.html'), 'utf8'), 'text/html');
+    expect(settings.querySelector('h1')?.textContent).toBe(language === 'en' ? 'Settings' : 'Ustawienia');
+    expect(settings.querySelector('.brand-logo')?.getAttribute('src')).toBe('/logo-icon.png');
   }
 });
 it('fails rather than publishing an empty or unexpected prerender shell', async () => {
