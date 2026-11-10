@@ -20,7 +20,9 @@ with sync_playwright() as playwright:
             dialog = page.get_by_role('dialog')
             expect(dialog).to_be_visible()
             rows = []
-            for provider, label in [('facebook', 'Facebook'), ('microsoft', 'Microsoft'), ('google', 'Google'), ('apple', 'Apple'), ('github', 'GitHub')]:
+            expect(dialog.get_by_text('Apple', exact=False)).to_have_count(0)
+            expect(dialog.locator('img[src="/provider-icons/apple.svg"]')).to_have_count(0)
+            for provider, label in [('facebook', 'Facebook'), ('microsoft', 'Microsoft'), ('google', 'Google'), ('github', 'GitHub')]:
                 option = dialog.get_by_text(('Continue with ' if language == 'en' else 'Kontynuuj z ') + label, exact=True).locator('..')
                 image = option.locator('img')
                 expect(image).to_have_attribute('src', f'/provider-icons/{provider}.svg')
@@ -31,11 +33,11 @@ with sync_playwright() as playwright:
                 assert image.bounding_box()['x'] < option.locator('span').last.bounding_box()['x'], 'Icon must precede label'
                 rows.append(option.bounding_box())
             assert max(row['width'] for row in rows) - min(row['width'] for row in rows) <= 1, 'Enabled and disabled provider rows must have equal width'
-            assert all(rows[index + 1]['y'] - (rows[index]['y'] + rows[index]['height']) >= 8 for index in range(4)), 'Provider rows must retain clear vertical spacing'
+            assert all(rows[index + 1]['y'] - (rows[index]['y'] + rows[index]['height']) >= 8 for index in range(len(rows) - 1)), 'Provider rows must retain clear vertical spacing'
             assert page.evaluate('document.documentElement.scrollWidth') <= width
             page.screenshot(path=str(output / f'provider-icons-{language}-{width}.png'))
-            results.append({'language': language, 'width': width, 'fiveLocalIconsLoaded': True, 'circular': True, 'beforeLabels': True})
+            results.append({'language': language, 'width': width, 'fourLocalIconsLoaded': True, 'appleAbsent': True, 'circular': True, 'beforeLabels': True})
             context.close()
     browser.close()
 (output / 'provider-icons-results.json').write_text(json.dumps({'passed': True, 'cases': results}, indent=2))
-print('Five circular provider icons: EN/PL, 320/390/1440px, loaded local assets and labels passed')
+print('Four circular provider icons; Apple absent: EN/PL, 320/390/1440px passed')

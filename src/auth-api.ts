@@ -1,7 +1,8 @@
 export interface Session { authenticated: boolean; refreshAvailable?: boolean; name?: string; email?: string; roles?: readonly string[]; initials?: string; avatarColor?: string }
-export const providerNames = ['facebook', 'microsoft', 'google', 'apple', 'github'] as const;
+// RSDSINFRA-32: Apple sign-in is deferred until the owner revisits its annual cost.
+export const providerNames = ['facebook', 'microsoft', 'google', 'github'] as const;
 export type Provider = typeof providerNames[number];
-export const providerLabels: Record<Provider, string> = { facebook: 'Facebook', microsoft: 'Microsoft', google: 'Google', apple: 'Apple', github: 'GitHub' };
+export const providerLabels: Record<Provider, string> = { facebook: 'Facebook', microsoft: 'Microsoft', google: 'Google', github: 'GitHub' };
 export interface AvailableProvider { id: Provider; enabled: boolean }
 export interface EmailChallenge { needsEmail: boolean; maskedEmail: string }
 export interface AccountSettings { email: string; emailVerified: boolean }
