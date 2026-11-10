@@ -1,5 +1,19 @@
 # Scanner version audit — 30 October 2026
 
+## Dependency refresh — 10 November 2026 (RSDSINFRA-27)
+
+This section supersedes the older Node/runtime and typescript-eslint entries below. Inventory: frontend Dependabot build PRs #19–#23; no matching open Helm PRs.
+
+| Source PR | Disposition |
+| --- | --- |
+| [#19](https://github.com/renf7/rsds-infra-company-page/pull/19), Node 25 | Superseded by Node 26.13 LTS (`node:26-alpine`), package engines >=26.13 <27 and Node 26 CI. Node 25 reached EOL on 1 June 2026. |
+| [#20](https://github.com/renf7/rsds-infra-company-page/pull/20), Buildx action | Apply latest stable 4.4.1, SHA f87e5991a6d7451dcb8d9637bfbc97413f497069. Exercise it in the non-publishing PR image scan as well as main publishing. |
+| [#21](https://github.com/renf7/rsds-infra-company-page/pull/21), Node types | Apply 26.6.6, matching the selected runtime major. |
+| [#22](https://github.com/renf7/rsds-infra-company-page/pull/22), checkout | Apply latest stable 7.0.1, SHA 3d3c42e5aac5ba805825da76410c181273ba90b1, to every workflow checkout. |
+| [#23](https://github.com/renf7/rsds-infra-company-page/pull/23), TypeScript 7 | Defer: current typescript-eslint explicitly supports >=4.8.4 <6.1.0. Retain TypeScript 6.0.3; update typescript-eslint to stable patch 8.72.2. No forced peers, suppressed compatibility warnings or removed typed rules. Revisit when upstream supports TypeScript 7. |
+
+Verified against npm registry metadata, the upstream checkout/Buildx latest release endpoints, [Node release schedule](https://github.com/nodejs/Release/blob/main/schedule.json) and [typescript-eslint compatibility](https://typescript-eslint.io/users/dependency-versions/). Existing ESLint 9 exception remains: current jsx-a11y still declares peers only through ESLint 9. All security scanners, PR event coverage and quality thresholds remain enabled; PR image builds never publish. Closing a source PR means its disposition is tracked here and in the consolidated PR, not that every proposed version was installed.
+
 Latest stable upstream releases were checked against GitHub Releases and npm registry metadata. Pins remain reproducible; no rolling latest tags or paid upgrades are introduced.
 
 | Component | Configured version | Result |

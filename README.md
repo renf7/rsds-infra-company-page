@@ -32,7 +32,7 @@ The two language entries share React components and typed localized content. Bui
 
 ## Development and tests
 
-Use Node 24 LTS (24.15 or newer within that major) and npm. Exact dependencies are locked; do not force incompatible peer dependencies. Docker builds require no host Node installation.
+Use Node 26 LTS (26.13 or newer within that major) and npm. Exact dependencies are locked; do not force incompatible peer dependencies. Docker builds require no host Node installation.
 
 ```sh
 npm ci --ignore-scripts
