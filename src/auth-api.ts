@@ -3,7 +3,7 @@ export interface Session { authenticated: boolean; refreshAvailable?: boolean; n
 export const providerNames = ['facebook', 'microsoft', 'google', 'github'] as const;
 export type Provider = typeof providerNames[number];
 export const providerLabels: Record<Provider, string> = { facebook: 'Facebook', microsoft: 'Microsoft', google: 'Google', github: 'GitHub' };
-export interface AvailableProvider { id: Provider; enabled: boolean }
+export interface AvailableProvider { id: Provider; enabled: boolean; visible?: boolean }
 export interface EmailChallenge { needsEmail: boolean; maskedEmail: string }
 export interface AccountSettings { email: string; emailVerified: boolean }
 export async function accountSettings(): Promise<AccountSettings> {
