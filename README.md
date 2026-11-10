@@ -1,5 +1,13 @@
 # rsds-infra-company-page
 
+Apple sign-in is deferred by the owner until the website generates profit
+([RSDSINFRA-32](https://rsdsoftware.atlassian.net/browse/RSDSINFRA-32), SCRUM Sprint 0,
+parent RSDSINFRA-8). Apple's Developer Program normally costs US$99 per year or
+the local equivalent: https://developer.apple.com/programs/ . The login dialog
+does not display Apple, even if backend provider discovery reports it enabled.
+Existing backend/Helm support is retained for a future explicit decision to fund,
+configure and validate live Apple sign-in. Do not re-enable it as routine provider setup.
+
 React and TypeScript company website for **RSD Software EU**, built with Vite and served by nginx. Tracking: [RSDSINFRA-5](https://rsdsoftware.atlassian.net/browse/RSDSINFRA-5).
 
 RSD Software EU builds robust Java software with AI-powered support, delivered by experienced
@@ -53,7 +61,7 @@ Vitest/Testing Library test frozen EN/PL DOM/content, storage/country/timeout la
 
 ## Headless browser and Helm checks
 
-SSO feature (RSDSINFRA-19): the header now has an accessible English/Polish login dialog for Facebook, Microsoft, Google, Apple and GitHub, with cookie-based session/logout. The existing marketing CSS/content/assets remain preserved. Authenticated UI state comes from the backend; JavaScript never stores or decodes JWTs for authorization. A standalone/frontend-only image reports an anonymous session and unavailable providers, never a simulated login.
+SSO feature (RSDSINFRA-19): the header now has an accessible English/Polish login dialog for Facebook, Microsoft, Google and GitHub, with cookie-based session/logout. The existing marketing CSS/content/assets remain preserved. Authenticated UI state comes from the backend; JavaScript never stores or decodes JWTs for authorization. A standalone/frontend-only image reports an anonymous session and unavailable providers, never a simulated login.
 
 For the full Spring/DynamoDB/provider-protocol test stack, use the runner's `local-test-auth.json`, frontend PR #17, auth-service PR #1, Helm PR #9 and runner PR #1 until merged. The expanded suite is 36 tests (16 marketing + 20 authentication), with real callbacks/JWT cookies/database requests. Provider registrations are not available, so the external provider boundary is explicitly a local protocol fixture; live-provider acceptance remains pending. Auth additions intentionally change header controls; strict visual comparisons cover unchanged main/footer regions (8 desktop/mobile EN/PL comparisons), while original header DOM, responsive navigation and new keyboard/mobile auth behavior have separate contracts.
 

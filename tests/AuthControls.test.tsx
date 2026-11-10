@@ -11,6 +11,17 @@ beforeEach(() => {
   HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); };
   HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); };
 });
+it.each(['en', 'pl'] as const)('omits Apple in %s even when the backend enables it', async language => {
+  const response = [...api.providerNames.map(id => ({ id, enabled: true })), { id: 'apple', enabled: true }];
+  vi.mocked(api.providers).mockResolvedValue(response as readonly api.AvailableProvider[]);
+  render(<AuthControls language={language} />);
+  fireEvent.click(screen.getByRole('button', { name: language === 'pl' ? 'Zaloguj się' : 'Log in' }));
+  await screen.findByRole('link', { name: language === 'pl' ? 'Kontynuuj z GitHub' : 'Continue with GitHub' });
+  expect(screen.queryByText(/Apple/)).not.toBeInTheDocument();
+  expect(document.querySelector('a[href*="/authorization/apple"]')).toBeNull();
+  expect(document.querySelector('img[src*="apple.svg"]')).toBeNull();
+  expect(screen.getAllByRole('link')).toHaveLength(4);
+});
 it('shows the saved account initials and permanent colour after login', async () => {
   vi.mocked(api.session).mockResolvedValue({ authenticated: true, name: 'Alice Lee', initials: 'AL', avatarColor: '#1e40af' });
   render(<AuthControls language="en" />);
