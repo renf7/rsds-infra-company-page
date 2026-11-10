@@ -124,3 +124,18 @@ it.each(['en', 'pl'] as const)('refreshes visibility while the %s dialog remains
   expect(screen.queryByRole('link')).not.toBeInTheDocument();
   expect(await screen.findByRole('status')).toBeVisible();
 }, 10000);
+
+it('ignores a response from a closed dialog after reopening', async () => {
+  let finishOld!: (value: readonly api.AvailableProvider[]) => void;
+  vi.mocked(api.providers).mockImplementationOnce(() => new Promise(resolve => { finishOld = resolve; }));
+  render(<AuthControls language="en" />);
+  fireEvent.click(screen.getByRole('button', { name: 'Log in' }));
+  await waitFor(() => { expect(api.providers).toHaveBeenCalledOnce(); });
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  vi.mocked(api.providers).mockResolvedValue([{ id: 'google', enabled: true, visible: true }]);
+  fireEvent.click(screen.getByRole('button', { name: 'Log in' }));
+  await screen.findByRole('link', { name: 'Continue with Google' });
+  act(() => { finishOld([{ id: 'github', enabled: true, visible: true }]); });
+  await waitFor(() => { expect(screen.queryByRole('link', { name: 'Continue with GitHub' })).not.toBeInTheDocument(); });
+  expect(screen.getByRole('link', { name: 'Continue with Google' })).toBeVisible();
+});

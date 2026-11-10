@@ -8,6 +8,7 @@ import { beginNavigation, runAction } from './activity';
 export function AuthControls({ language }: { language: Language }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const button = useRef<HTMLButtonElement>(null);
+  const generation = useRef(0);
   const [identity, setIdentity] = useState<Session>({ authenticated: false });
   const [available, setAvailable] = useState<readonly AvailableProvider[]>([]);
   const [error, setError] = useState('');
@@ -17,16 +18,18 @@ export function AuthControls({ language }: { language: Language }) {
   const shown = providerNames.filter(provider => available.some(item => item.id === provider && item.enabled && item.visible !== false));
   useEffect(() => {
     if (!opened) return;
+    const currentGeneration = generation.current;
     let active = true;
+    const current = () => active && generation.current === currentGeneration;
     let timer: ReturnType<typeof setTimeout>;
     const refresh = async () => {
       try {
         const next = await providers();
-        if (active) { setAvailable(next); setError(''); }
+        if (current()) { setAvailable(next); setError(''); }
       } catch {
-        if (active) { setAvailable([]); setError(polish ? 'Logowanie jest chwilowo niedostępne.' : 'Sign-in is temporarily unavailable.'); }
+        if (current()) { setAvailable([]); setError(polish ? 'Logowanie jest chwilowo niedostępne.' : 'Sign-in is temporarily unavailable.'); }
       } finally {
-        if (active) { setLoaded(true); timer = setTimeout(() => { void refresh(); }, 5000); }
+        if (current()) { setLoaded(true); timer = setTimeout(() => { void refresh(); }, 5000); }
       }
     };
     void runAction(refresh);
@@ -58,11 +61,13 @@ export function AuthControls({ language }: { language: Language }) {
     return () => { active = false; };
   }, [polish]);
   const open = () => {
+    generation.current += 1;
     setError('');
     setAvailable([]); setLoaded(false); setOpened(true);
     dialog.current?.showModal();
   };
-  const close = () => { setOpened(false); dialog.current?.close(); button.current?.focus(); };
+  const dismiss = () => { generation.current += 1; setOpened(false); };
+  const close = () => { dismiss(); dialog.current?.close(); button.current?.focus(); };
   const logout = () => {
     void runAction(() => action('logout')).then(() => {
       setIdentity({ authenticated: false }); setError('');
@@ -77,7 +82,7 @@ export function AuthControls({ language }: { language: Language }) {
         <span aria-hidden="true">↪</span><span className="auth-button-label">{polish ? 'Zaloguj się' : 'Log in'}</span>
       </button>}
     {error && <p className="auth-error" role="alert">{error}</p>}
-    <dialog ref={dialog} className="auth-dialog" aria-labelledby="auth-heading" aria-describedby="auth-description" onClose={() => { setOpened(false); }} onCancel={() => { setOpened(false); }}>
+    <dialog ref={dialog} className="auth-dialog" aria-labelledby="auth-heading" aria-describedby="auth-description" onClose={dismiss} onCancel={dismiss}>
       <h2 id="auth-heading">{polish ? 'Zaloguj się' : 'Log in'}</h2>
       <p id="auth-description" className="auth-description">{polish ? 'Wybierz dostawcę, aby kontynuować.' : 'Choose a provider to continue.'}</p>
       <div className="auth-provider-list">{shown.map(provider => {
