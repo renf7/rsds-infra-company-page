@@ -14,6 +14,12 @@ with sync_playwright() as playwright:
         for language, route in [('en', '/'), ('pl', '/pl/')]:
             context = browser.new_context(viewport={'width': width, 'height': 900})
             context.route('https://api.country.is/**', lambda request: request.fulfill(json={'country': 'US'}))
+            # This static frontend visual test has no auth backend. Supply only
+            # discovery data; full OAuth/JWT tests live in rsds-infra-local.
+            context.route('**/api/auth/providers', lambda request: request.fulfill(json=[
+                {'id': provider, 'enabled': True, 'visible': True}
+                for provider in ['facebook', 'microsoft', 'google', 'github']
+            ]))
             page = context.new_page()
             page.goto(base + route, wait_until='networkidle')
             page.get_by_role('button', name='Log in' if language == 'en' else 'Zaloguj się', exact=True).click()

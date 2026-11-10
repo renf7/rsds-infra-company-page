@@ -120,7 +120,7 @@ it.each(['en', 'pl'] as const)('refreshes visibility while the %s dialog remains
   expect(screen.getByRole('link', { name: /Google/ })).toBeVisible();
   fireEvent.click(screen.getByRole('button', { name: language === 'pl' ? 'Zamknij' : 'Close' }));
   vi.mocked(api.providers).mockResolvedValue([{ id: 'github', enabled: false, visible: true }]);
-  await act(async () => { fireEvent.click(screen.getByRole('button', { name: language === 'pl' ? 'Zaloguj się' : 'Log in' })); });
+  act(() => { fireEvent.click(screen.getByRole('button', { name: language === 'pl' ? 'Zaloguj się' : 'Log in' })); });
   expect(screen.queryByRole('link')).not.toBeInTheDocument();
-  expect(screen.getByRole('status')).toBeVisible();
+  expect(await screen.findByRole('status')).toBeVisible();
 }, 10000);
