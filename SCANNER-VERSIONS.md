@@ -58,3 +58,13 @@ Combined Dependabot PRs #10 (setup-python 7.1.0), #11 (build-push-action 7.4.0),
 
 Tracking: https://rsdsoftware.atlassian.net/browse/RSDSINFRA-27. Validate both consolidated PR heads with the local runner and explicit --e2e; browser tests stay disabled by default. PR workflows remain non-deploying.
 
+
+## RSDSINFRA-35 — 10 November 2026
+
+Verified official upstream latest releases: zizmor 1.32.0, Cosign 3.1.4,
+cosign-installer 4.1.3 (756fe2d284c7292c4e9b62c8a28f1e5629c59532), ZAP 2.17.0
+(image sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af).
+Docker setup action 5.7.0 uses 3f1ab1ab0e29231562e4db4ca600c1a49653bac6.
+Public free tooling only; no paid GitHub attestation/Scout dependency. Main signing
+and registry retention require post-merge live publishing evidence. Existing pins
+and compatibility exceptions above remain unchanged.

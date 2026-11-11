@@ -10,12 +10,14 @@ COPY scripts ./scripts
 COPY docs/privacy ./docs/privacy
 ARG PRIVACY_POLICY_PREVIEW=false
 RUN PRIVACY_POLICY_PREVIEW=$PRIVACY_POLICY_PREVIEW npm run build
+RUN node scripts/security-headers.mjs
 
 # Preserve the hardened nginx runtime expected by the Helm chart.
 FROM nginx:alpine
 RUN apk upgrade --no-cache
 COPY --from=build /app/dist/ /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/security-headers.conf /etc/nginx/security-headers.conf
 USER 101:101
 EXPOSE 8080
 ENTRYPOINT ["nginx"]

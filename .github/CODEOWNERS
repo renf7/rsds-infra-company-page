@@ -1,0 +1,11 @@
+/.github/CODEOWNERS @renf7
+/.github/workflows/ @renf7
+/Dockerfile @renf7
+/nginx.conf @renf7
+/tools/security/ @renf7
+/scripts/requirements.txt @renf7
+/package.json @renf7
+/package-lock.json @renf7
+/eslint.config.mjs @renf7
+/sonar-project.properties @renf7
+/scripts/security-headers.mjs @renf7

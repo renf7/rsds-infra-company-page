@@ -1,0 +1,31 @@
+name: Passive web security
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '31 6 * * 2'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: passive-web-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  baseline:
+    name: ZAP passive local baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Build and passively inspect the local site only
+        run: bash tools/security/zap-baseline.sh
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: zap-passive-report
+          retention-days: 7
+          path: .validation/zap/
