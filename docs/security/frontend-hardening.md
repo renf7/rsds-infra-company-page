@@ -30,6 +30,10 @@ The job verifies the signature with the exact expected workflow identity, and re
 SBOM/provenance/index/signature verification JSON for seven days. Public Sigstore
 transparency metadata is public: no secrets may be passed as build arguments.
 
+Registry signature discovery may lag a successful upload. Publishing retries the
+same strict verification up to six times over 50 seconds; exhaustion fails the job.
+It never retries signing or disables issuer, identity or transparency checks.
+
 Consumers must verify by digest (substitute the published sha256 digest):
 
 ```bash
